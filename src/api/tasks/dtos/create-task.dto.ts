@@ -1,13 +1,19 @@
-import { IsEnum, IsString } from "class-validator";
+import { IsEnum, IsIn, IsInt, IsString } from "class-validator";
 import { TaskStatus } from "../task.entity";
 
 export class CreateTaskDto {
 	@IsString()
-	title: string;
+	name: string;
 
 	@IsString()
 	description: string;
 
 	@IsEnum(TaskStatus)
 	status: TaskStatus;
+
+	@IsInt()
+	userId: number;
+
+	@IsInt()
+	projectId: number;
 }
