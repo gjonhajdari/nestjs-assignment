@@ -5,11 +5,15 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { ProjectsService } from "../projects/projects.service";
 import { User } from "./user.entity";
 
 @Injectable()
 export class UsersService {
-	constructor(@InjectRepository(User) private repo: Repository<User>) {}
+	constructor(
+		@InjectRepository(User) private repo: Repository<User>,
+		private projectsService: ProjectsService,
+	) {}
 
 	findById(id: number) {
 		return this.repo.findOne({ where: { id } });
@@ -51,5 +55,18 @@ export class UsersService {
 		if (!user) throw new NotFoundException("User not found");
 
 		return this.repo.remove(user);
+	}
+
+	async addToProject(userId: number, projectId: number) {
+		const user = await this.repo.findOne({ where: { id: userId } });
+		if (!user) throw new NotFoundException("User not found");
+
+		const project = await this.projectsService.findById(projectId);
+		if (!project) throw new NotFoundException("Project not found");
+
+		console.log(user);
+
+		user.projects = [project];
+		return this.repo.save(user);
 	}
 }

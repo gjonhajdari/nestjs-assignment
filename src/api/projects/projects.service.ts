@@ -6,10 +6,7 @@ import { Project } from "./project.entity";
 
 @Injectable()
 export class ProjectsService {
-	constructor(
-		@InjectRepository(Project) private repo: Repository<Project>,
-		private usersService: UsersService,
-	) {}
+	constructor(@InjectRepository(Project) private repo: Repository<Project>) {}
 
 	findById(id: number) {
 		return this.repo.findOne({ where: { id } });
@@ -37,16 +34,5 @@ export class ProjectsService {
 		if (!project) throw new NotFoundException("Project not found");
 
 		return this.repo.remove(project);
-	}
-
-	async addUser(projectId: number, userId: number) {
-		const project = await this.repo.findOne({ where: { id: projectId } });
-		if (!project) throw new NotFoundException("Project not found");
-
-		const user = await this.usersService.findById(userId);
-		if (!user) throw new NotFoundException("User not found");
-
-		project.users.push(user);
-		return this.repo.save(project);
 	}
 }

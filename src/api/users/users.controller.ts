@@ -7,6 +7,7 @@ import {
 	Patch,
 	Post,
 } from "@nestjs/common";
+import { AddUserToProjectDto } from "./dtos/add-user-to-project.dto";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { UsersService } from "./users.service";
@@ -28,6 +29,11 @@ export class UsersController {
 			body.email,
 			body.location,
 		);
+	}
+
+	@Patch()
+	addUserToProject(@Body() body: AddUserToProjectDto) {
+		return this.usersService.addToProject(body.userId, body.projectId);
 	}
 
 	@Patch("/:id")
