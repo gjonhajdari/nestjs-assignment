@@ -1,5 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module, ValidationPipe } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_PIPE } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Project } from "./api/projects/project.entity";
 import { ProjectsModule } from "./api/projects/projects.module";
@@ -35,6 +36,15 @@ import { AppService } from "./app.service";
 		TasksModule,
 	],
 	controllers: [AppController],
-	providers: [AppService, ConfigService],
+	providers: [
+		AppService,
+		ConfigService,
+		{
+			provide: APP_PIPE,
+			useValue: new ValidationPipe({
+				whitelist: true,
+			}),
+		},
+	],
 })
 export class AppModule {}
