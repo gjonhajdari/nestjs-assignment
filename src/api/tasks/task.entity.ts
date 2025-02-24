@@ -6,6 +6,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
+import { Project } from "../projects/project.entity";
 import { User } from "../users/user.entity";
 
 export enum TaskStatus {
@@ -37,6 +38,12 @@ export class Task {
 
 	@UpdateDateColumn({ name: "updated_at" })
 	updatedAt: Date;
+
+	@ManyToOne(
+		() => Project,
+		(project) => project.tasks,
+	)
+	project: Project;
 
 	@ManyToOne(
 		() => User,

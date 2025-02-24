@@ -3,9 +3,11 @@ import {
 	CreateDateColumn,
 	Entity,
 	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
+import { Task } from "../tasks/task.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -24,6 +26,12 @@ export class Project {
 
 	@UpdateDateColumn({ name: "updated_at" })
 	updatedAt: Date;
+
+	@OneToMany(
+		() => Task,
+		(task) => task.project,
+	)
+	tasks: Task[];
 
 	@ManyToMany(
 		() => User,
