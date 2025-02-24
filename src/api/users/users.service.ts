@@ -64,8 +64,6 @@ export class UsersService {
 		const project = await this.projectsService.findById(projectId);
 		if (!project) throw new NotFoundException("Project not found");
 
-		console.log(user);
-
 		user.projects = [project];
 		return this.repo.save(user);
 	}
