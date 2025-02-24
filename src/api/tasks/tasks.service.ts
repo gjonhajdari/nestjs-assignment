@@ -38,7 +38,7 @@ export class TasksService {
 	}
 
 	async update(id: number, attrs: Partial<Task>) {
-		const task = await this.repo.find({ where: { id } });
+		const task = await this.repo.findOne({ where: { id } });
 		if (!task) throw new NotFoundException("Task not found");
 
 		Object.assign(task, attrs);
