@@ -6,65 +6,59 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
+import { CreateUserDto } from "./dtos/create-user.dto";
 import { User } from "./user.entity";
 
 @Injectable()
 export class UsersService {
 	constructor(
-		@InjectRepository(User) private repo: Repository<User>,
+		@InjectRepository(User) private userRepository: Repository<User>,
 		private projectsService: ProjectsService,
 	) {}
 
-	findById(id: number) {
-		return this.repo.findOne({ where: { id } });
+	async findById(id: number): Promise<User> {
+		const user = await this.userRepository.findOne({ where: { id } });
+		if (!user) throw new NotFoundException("User does not exist");
+
+		return user;
 	}
 
-	findByEmail(email: string) {
-		return this.repo.findOne({ where: { email } });
+	async findByEmail(email: string): Promise<User | null> {
+		const user = await this.userRepository.findOne({ where: { email } });
+		return user;
 	}
 
-	async create(
-		firstName: string,
-		lastName: string,
-		email: string,
-		location: string,
-	) {
-		const user = await this.findByEmail(email);
-		if (user) throw new BadRequestException("User already exists");
+	async create(payload: CreateUserDto): Promise<User> {
+		const user = await this.findByEmail(payload.email);
+		if (user) throw new BadRequestException("Email is already taken");
 
-		const newUser = await this.repo.create({
-			firstName,
-			lastName,
-			email,
-			location,
+		const newUser = await this.userRepository.create({
+			firstName: payload.firstName,
+			lastName: payload.lastName,
+			email: payload.email,
+			location: payload.location,
 		});
 
-		return this.repo.save(newUser);
+		return this.userRepository.save(newUser);
 	}
 
-	async update(id: number, attrs: Partial<User>) {
-		const user = await this.repo.findOne({ where: { id } });
-		if (!user) throw new NotFoundException("User not found");
+	async update(id: number, attrs: Partial<User>): Promise<User> {
+		const user = await this.findById(id);
 
 		Object.assign(user, attrs);
-		return this.repo.save(user);
+		return this.userRepository.save(user);
 	}
 
-	async delete(id: number) {
-		const user = await this.repo.findOne({ where: { id } });
-		if (!user) throw new NotFoundException("User not found");
-
-		return this.repo.remove(user);
+	async delete(id: number): Promise<User> {
+		const user = await this.findById(id);
+		return this.userRepository.remove(user);
 	}
 
-	async addToProject(userId: number, projectId: number) {
-		const user = await this.repo.findOne({ where: { id: userId } });
-		if (!user) throw new NotFoundException("User not found");
-
+	async addToProject(userId: number, projectId: number): Promise<User> {
+		const user = await this.findById(userId);
 		const project = await this.projectsService.findById(projectId);
-		if (!project) throw new NotFoundException("Project not found");
 
 		user.projects = [project];
-		return this.repo.save(user);
+		return this.userRepository.save(user);
 	}
 }

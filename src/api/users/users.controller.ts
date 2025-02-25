@@ -10,6 +10,7 @@ import {
 import { AddUserToProjectDto } from "./dtos/add-user-to-project.dto";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
+import { User } from "./user.entity";
 import { UsersService } from "./users.service";
 
 @Controller("/users")
@@ -17,32 +18,30 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Get("/:email")
-	findUser(@Param("email") email: string) {
+	async findUser(@Param("email") email: string): Promise<User | null> {
 		return this.usersService.findByEmail(email);
 	}
 
 	@Post()
-	createUser(@Body() body: CreateUserDto) {
-		return this.usersService.create(
-			body.firstName,
-			body.lastName,
-			body.email,
-			body.location,
-		);
+	async createUser(@Body() body: CreateUserDto): Promise<User> {
+		return this.usersService.create(body);
 	}
 
 	@Patch()
-	addUserToProject(@Body() body: AddUserToProjectDto) {
+	async addUserToProject(@Body() body: AddUserToProjectDto): Promise<User> {
 		return this.usersService.addToProject(body.userId, body.projectId);
 	}
 
 	@Patch("/:id")
-	updateUser(@Param("id") id: string, @Body() body: UpdateUserDto) {
+	async updateUser(
+		@Param("id") id: string,
+		@Body() body: UpdateUserDto,
+	): Promise<User> {
 		return this.usersService.update(Number.parseInt(id), body);
 	}
 
 	@Delete("/:id")
-	deleteUser(@Param("id") id: string) {
+	async deleteUser(@Param("id") id: string): Promise<User> {
 		return this.usersService.delete(Number.parseInt(id));
 	}
 }
