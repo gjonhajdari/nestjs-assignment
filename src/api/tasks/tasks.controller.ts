@@ -14,83 +14,76 @@ import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
-import { TaskStatus } from "./task.entity";
+import { Task, TaskStatus } from "./task.entity";
 import { TasksService } from "./tasks.service";
 
 @Controller("/tasks")
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
+	calculateSkip(pageSize, page): number {
+		return (page - 1) * pageSize;
+	}
+
+	async findTasks(
+		id: number,
+		status: TaskStatus,
+		page = 1,
+		pageSize = 10,
+	): Promise<Task[]> {
+		const skip = this.calculateSkip(page, pageSize);
+		return this.tasksService.findByUserAndStatus(id, status, pageSize, skip);
+	}
+
 	@Get("/:id")
-	findTask(@Param("id") id: string) {
-		return this.tasksService.findById(Number.parseInt(id));
+	async findById(@Param("id", ParseIntPipe) id: number): Promise<Task> {
+		return this.tasksService.findById(id);
 	}
 
 	@Post()
-	createTask(@Body() body: CreateTaskDto) {
-		return this.tasksService.create(
-			body.name,
-			body.description,
-			body.status,
-			body.userId,
-			body.projectId,
-		);
+	async createTask(@Body() body: CreateTaskDto): Promise<Task> {
+		return this.tasksService.create(body);
 	}
 
 	@Get("/todo/:id")
-	findTodo(@Param("id") id: string, @Query() params: PaginationDto) {
-		const page = params.page || 1;
-		const pageSize = params.pageSize || 10; // or whatever default you want
-		const skip = (page - 1) * pageSize;
-
-		return this.tasksService.findByUserAndStatus(
-			Number.parseInt(id),
-			TaskStatus.TODO,
-			pageSize,
-			skip,
-		);
+	async findTodo(
+		@Param("id", ParseIntPipe) id: number,
+		@Query() params: PaginationDto,
+	): Promise<Task[]> {
+		return this.findTasks(id, TaskStatus.TODO, params.page, params.pageSize);
 	}
 
 	@Get("/doing/:id")
-	findDoing(@Param("id") id: string, @Query() params: PaginationDto) {
-		const page = params.page || 1;
-		const pageSize = params.pageSize || 10; // or whatever default you want
-		const skip = (page - 1) * pageSize;
-
-		return this.tasksService.findByUserAndStatus(
-			Number.parseInt(id),
-			TaskStatus.DOING,
-			pageSize,
-			skip,
-		);
+	async findDoing(
+		@Param("id", ParseIntPipe) id: number,
+		@Query() params: PaginationDto,
+	): Promise<Task[]> {
+		return this.findTasks(id, TaskStatus.DOING, params.page, params.pageSize);
 	}
 
 	@Get("/done/:id")
-	findDone(@Param("id") id: string, @Query() params: PaginationDto) {
-		const page = params.page || 1;
-		const pageSize = params.pageSize || 10;
-		const skip = (page - 1) * pageSize;
-
-		return this.tasksService.findByUserAndStatus(
-			Number.parseInt(id),
-			TaskStatus.DONE,
-			pageSize,
-			skip,
-		);
+	async findDone(
+		@Param("id", ParseIntPipe) id: number,
+		@Query() params: PaginationDto,
+	): Promise<Task[]> {
+		return this.findTasks(id, TaskStatus.DONE, params.page, params.pageSize);
 	}
 
 	@Post("/count")
-	countTasks(@Body() body: CountTasksDto) {
+	async countTasks(@Body() body: CountTasksDto): Promise<number> {
 		return this.tasksService.count(body);
 	}
 
 	@Patch("/:id")
-	updateTask(@Param("id") id: string, @Body() body: UpdateTaskDto) {
-		return this.tasksService.update(Number.parseInt(id), body);
+	async updateTask(
+		@Param("id", ParseIntPipe) id: number,
+		@Body() body: UpdateTaskDto,
+	): Promise<Task> {
+		return this.tasksService.update(id, body);
 	}
 
 	@Delete("/:id")
-	deleteTask(@Param("id") id: string) {
-		return this.tasksService.delete(Number.parseInt(id));
+	async deleteTask(@Param("id", ParseIntPipe) id: number): Promise<Task> {
+		return this.tasksService.delete(id);
 	}
 }

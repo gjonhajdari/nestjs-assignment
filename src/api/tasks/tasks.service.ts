@@ -4,18 +4,22 @@ import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
 import { CountTasksDto } from "./dtos/count-tasks.dto";
+import { CreateTaskDto } from "./dtos/create-task.dto";
 import { Task, TaskStatus } from "./task.entity";
 
 @Injectable()
 export class TasksService {
 	constructor(
-		@InjectRepository(Task) private repo: Repository<Task>,
+		@InjectRepository(Task) private taskRepository: Repository<Task>,
 		private usersService: UsersService,
 		private projectsService: ProjectsService,
 	) {}
 
-	findById(id: number) {
-		return this.repo.findOne({ where: { id } });
+	async findById(id: number): Promise<Task> {
+		const task = await this.taskRepository.findOne({ where: { id } });
+		if (!task) throw new NotFoundException("Task does not exist");
+
+		return task;
 	}
 
 	async findByUserAndStatus(
@@ -23,11 +27,10 @@ export class TasksService {
 		status: TaskStatus,
 		take?: number,
 		skip?: number,
-	) {
+	): Promise<Task[]> {
 		const user = await this.usersService.findById(userId);
-		if (!user) throw new NotFoundException("User not found");
 
-		return this.repo.find({
+		return this.taskRepository.find({
 			select: {
 				id: true,
 				name: true,
@@ -43,7 +46,7 @@ export class TasksService {
 		});
 	}
 
-	async count(payload: CountTasksDto) {
+	async count(payload: CountTasksDto): Promise<number> {
 		const tasks = await this.findByUserAndStatus(
 			payload.userId,
 			payload.status,
@@ -51,38 +54,30 @@ export class TasksService {
 		return tasks.length;
 	}
 
-	async create(
-		name: string,
-		description: string,
-		status: TaskStatus,
-		userId: number,
-		projectId: number,
-	) {
-		const task = await this.repo.create({ name, description, status });
+	async create(payload: CreateTaskDto): Promise<Task> {
+		const task = await this.taskRepository.create({
+			name: payload.name,
+			description: payload.description,
+			status: payload.status,
+		});
 
-		const user = await this.usersService.findById(userId);
-		if (!user) throw new NotFoundException("User does not exist");
-
-		const project = await this.projectsService.findById(projectId);
-		if (!project) throw new NotFoundException("Project does not exist");
+		const user = await this.usersService.findById(payload.userId);
+		const project = await this.projectsService.findById(payload.projectId);
 
 		task.user = user;
 		task.project = project;
-		return this.repo.save(task);
+		return this.taskRepository.save(task);
 	}
 
-	async update(id: number, attrs: Partial<Task>) {
-		const task = await this.repo.findOne({ where: { id } });
-		if (!task) throw new NotFoundException("Task not found");
+	async update(id: number, attrs: Partial<Task>): Promise<Task> {
+		const task = await this.findById(id);
 
 		Object.assign(task, attrs);
-		return this.repo.save(task);
+		return this.taskRepository.save(task);
 	}
 
-	async delete(id: number) {
-		const task = await this.repo.find({ where: { id } });
-		if (!task) throw new NotFoundException("Task not found");
-
-		return this.repo.remove(task);
+	async delete(id: number): Promise<Task> {
+		const task = await this.findById(id);
+		return this.taskRepository.remove(task);
 	}
 }
