@@ -18,7 +18,12 @@ export class TasksService {
 		return this.repo.findOne({ where: { id } });
 	}
 
-	async findByUserAndStatus(userId: number, status: TaskStatus) {
+	async findByUserAndStatus(
+		userId: number,
+		status: TaskStatus,
+		take?: number,
+		skip?: number,
+	) {
 		const user = await this.usersService.findById(userId);
 		if (!user) throw new NotFoundException("User not found");
 
@@ -33,6 +38,8 @@ export class TasksService {
 			},
 			relations: { project: true },
 			where: { user, status },
+			take,
+			skip,
 		});
 	}
 
