@@ -1,38 +1,43 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UsersService } from "../users/users.service";
 import { Project } from "./project.entity";
 
 @Injectable()
 export class ProjectsService {
-	constructor(@InjectRepository(Project) private repo: Repository<Project>) {}
+	constructor(
+		@InjectRepository(Project) private projectRepository: Repository<Project>,
+	) {}
 
-	findById(id: number) {
-		return this.repo.findOne({ where: { id } });
+	async findById(id: number): Promise<Project> {
+		const project = await this.projectRepository.findOne({ where: { id } });
+		if (!project) throw new NotFoundException("Project does not exist");
+
+		return project;
 	}
 
-	findByName(name: string) {
-		return this.repo.findOne({ where: { name } });
+	async findByName(name: string): Promise<Project> {
+		const project = await this.projectRepository.findOne({ where: { name } });
+		if (!project)
+			throw new NotFoundException(`Project '${name}' does not exist`);
+
+		return project;
 	}
 
-	async create(name: string, description: string) {
-		const project = await this.repo.create({ name, description });
-		return this.repo.save(project);
+	async create(name: string, description: string): Promise<Project> {
+		const project = await this.projectRepository.create({ name, description });
+		return this.projectRepository.save(project);
 	}
 
 	async update(id: number, attrs: Partial<Project>) {
-		const project = await this.repo.findOne({ where: { id } });
-		if (!project) throw new NotFoundException("Project not found");
+		const project = await this.findById(id);
 
 		Object.assign(project, attrs);
-		return this.repo.save(project);
+		return this.projectRepository.save(project);
 	}
 
 	async delete(id: number) {
-		const project = await this.repo.findOne({ where: { id } });
-		if (!project) throw new NotFoundException("Project not found");
-
-		return this.repo.remove(project);
+		const project = await this.findById(id);
+		return this.projectRepository.remove(project);
 	}
 }
