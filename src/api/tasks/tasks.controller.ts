@@ -10,7 +10,6 @@ import {
 	Query,
 	UseGuards,
 } from "@nestjs/common";
-import { AuthGuard } from "../guards/auth.guard";
 import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
