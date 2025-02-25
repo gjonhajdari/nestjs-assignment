@@ -11,7 +11,7 @@ import { CreateProjectDto } from "./dtos/create-project.dto";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { ProjectsService } from "./projects.service";
 
-@Controller("projects")
+@Controller("/projects")
 export class ProjectsController {
 	constructor(private readonly projectsService: ProjectsService) {}
 
