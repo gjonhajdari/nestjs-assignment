@@ -15,6 +15,13 @@ export class TasksService {
 		private projectsService: ProjectsService,
 	) {}
 
+	/**
+	 * Retrieves a task by its ID from the database
+	 *
+	 * @param id - The unique id of the task
+	 * @returns Promise that resolves to the found Task entity
+	 * @throws {NotFoundException} - If no task is found with the given ID
+	 */
 	async findById(id: number): Promise<Task> {
 		const task = await this.taskRepository.findOne({ where: { id } });
 		if (!task) throw new NotFoundException("Task does not exist");
@@ -22,6 +29,15 @@ export class TasksService {
 		return task;
 	}
 
+	/**
+	 * Retrieves a task by its ID from the database
+	 *
+	 * @param userId - The unique id of the user
+	 * @param status - The completion status of the task
+	 * @param take - The number of entities returned
+	 * @param skip - The offset from which entities are taken
+	 * @returns Promise that resolves to the found Task entity
+	 */
 	async findByUserAndStatus(
 		userId: number,
 		status: TaskStatus,
@@ -46,6 +62,12 @@ export class TasksService {
 		});
 	}
 
+	/**
+	 * Retrieves the amount of tasks assigned to a user based on the status
+	 *
+	 * @param payload - Object containing the user ID and task status
+	 * @returns Promise that resolves to the number of tasks
+	 */
 	async count(payload: CountTasksDto): Promise<number> {
 		const tasks = await this.findByUserAndStatus(
 			payload.userId,
@@ -54,6 +76,12 @@ export class TasksService {
 		return tasks.length;
 	}
 
+	/**
+	 * Creates a new task and saves it to the database
+	 *
+	 * @param payload - The required information to create a task, and the associated user ID and project ID
+	 * @returns Promise that resolves to the created Task entity
+	 */
 	async create(payload: CreateTaskDto): Promise<Task> {
 		const task = await this.taskRepository.create({
 			name: payload.name,
@@ -69,6 +97,13 @@ export class TasksService {
 		return this.taskRepository.save(task);
 	}
 
+	/**
+	 * Updates a specific task with the new given attributes
+	 *
+	 * @param id - The unique ID of the task
+	 * @param attrs - Attributes of the Task entity to update
+	 * @returns Promise that resolves to the updated Task entity
+	 */
 	async update(id: number, attrs: Partial<Task>): Promise<Task> {
 		const task = await this.findById(id);
 
@@ -76,6 +111,12 @@ export class TasksService {
 		return this.taskRepository.save(task);
 	}
 
+	/**
+	 * Deletes a task by its ID from the database
+	 *
+	 * @param id - The unique ID of the task
+	 * @returns Promise that resolves to the updated Task entity
+	 */
 	async delete(id: number): Promise<Task> {
 		const task = await this.findById(id);
 		return this.taskRepository.remove(task);
