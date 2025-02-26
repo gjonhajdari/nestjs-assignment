@@ -57,7 +57,7 @@ export class ProjectsService {
 	 * @param description - The project description
 	 * @returns Promise that resolves to the created Project entity
 	 */
-	async create(name: string, description: string): Promise<Project> {
+	async createProject(name: string, description: string): Promise<Project> {
 		const project = await this.projectRepository.create({ name, description });
 		return this.projectRepository.save(project);
 	}
@@ -69,7 +69,7 @@ export class ProjectsService {
 	 * @param attrs - Attributes of the Project entity to update
 	 * @returns Promise that resolves to the updated Project entity
 	 */
-	async update(id: string, attrs: UpdateProjectDto) {
+	async updateProject(id: string, attrs: UpdateProjectDto) {
 		const project = await this.findById(id);
 
 		if (attrs.userId) {
@@ -108,7 +108,7 @@ export class ProjectsService {
 	 * @param id - The unique UUID of the project
 	 * @returns Promise that resolves to the updated Project entity
 	 */
-	async delete(id: string) {
+	async deleteProject(id: string) {
 		const project = await this.findById(id);
 		return this.projectRepository.remove(project);
 	}

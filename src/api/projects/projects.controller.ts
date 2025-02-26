@@ -30,7 +30,7 @@ export class ProjectsController {
 
 	@Post()
 	async createProject(@Body() body: CreateProjectDto): Promise<Project> {
-		return this.projectsService.create(body.name, body.description);
+		return this.projectsService.createProject(body.name, body.description);
 	}
 
 	@Patch()
@@ -43,13 +43,13 @@ export class ProjectsController {
 		@Param("id", ParseUUIDPipe) id: string,
 		@Body() body: UpdateProjectDto,
 	): Promise<Project> {
-		return this.projectsService.update(id, body);
+		return this.projectsService.updateProject(id, body);
 	}
 
 	@Delete("/:id")
 	async deleteProject(
 		@Param("id", ParseUUIDPipe) id: string,
 	): Promise<Project> {
-		return this.projectsService.delete(id);
+		return this.projectsService.deleteProject(id);
 	}
 }
