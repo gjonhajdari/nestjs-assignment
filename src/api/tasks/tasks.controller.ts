@@ -46,7 +46,7 @@ export class TasksController {
 
 	@Post()
 	async createTask(@Body() body: CreateTaskDto): Promise<Task> {
-		return this.tasksService.create(body);
+		return this.tasksService.createTask(body);
 	}
 
 	@Get("/todo/:userId")
@@ -98,11 +98,11 @@ export class TasksController {
 		@Param("id", ParseUUIDPipe) id: string,
 		@Body() body: UpdateTaskDto,
 	): Promise<Task> {
-		return this.tasksService.update(id, body);
+		return this.tasksService.updateTask(id, body);
 	}
 
 	@Delete("/:id")
 	async deleteTask(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
-		return this.tasksService.delete(id);
+		return this.tasksService.deleteTask(id);
 	}
 }

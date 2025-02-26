@@ -91,7 +91,7 @@ export class TasksService {
 	 * @param payload - The required information to create a task, and the associated user UUID and project UUID
 	 * @returns Promise that resolves to the created Task entity
 	 */
-	async create(payload: CreateTaskDto): Promise<Task> {
+	async createTask(payload: CreateTaskDto): Promise<Task> {
 		const task = await this.taskRepository.create({
 			name: payload.name,
 			description: payload.description,
@@ -113,7 +113,7 @@ export class TasksService {
 	 * @param attrs - Attributes of the Task entity to update, with optional user and project UUIDs
 	 * @returns Promise that resolves to the updated Task entity
 	 */
-	async update(id: string, attrs: UpdateTaskDto): Promise<Task> {
+	async updateTask(id: string, attrs: UpdateTaskDto): Promise<Task> {
 		const task = await this.findById(id);
 
 		if (attrs.userId) {
@@ -138,7 +138,7 @@ export class TasksService {
 	 * @param id - The unique UUID of the task
 	 * @returns Promise that resolves to the updated Task entity
 	 */
-	async delete(id: string): Promise<Task> {
+	async deleteTask(id: string): Promise<Task> {
 		const task = await this.findById(id);
 		return this.taskRepository.remove(task);
 	}
