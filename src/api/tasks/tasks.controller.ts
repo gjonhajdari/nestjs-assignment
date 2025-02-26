@@ -20,25 +20,6 @@ import { TasksService } from "./tasks.service";
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
-	calculateSkip(pageSize, page): number {
-		return (page - 1) * pageSize;
-	}
-
-	async findTasks(
-		userId: string,
-		status: TaskStatus,
-		page = 1,
-		pageSize = 10,
-	): Promise<Task[]> {
-		const skip = this.calculateSkip(page, pageSize);
-		return this.tasksService.findByUserAndStatus(
-			userId,
-			status,
-			pageSize,
-			skip,
-		);
-	}
-
 	@Get("/:id")
 	async findById(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
 		return this.tasksService.findById(id);
@@ -54,7 +35,7 @@ export class TasksController {
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(
+		return this.tasksService.findTasksByUserAndStatus(
 			userId,
 			TaskStatus.TODO,
 			params.page,
@@ -67,7 +48,7 @@ export class TasksController {
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(
+		return this.tasksService.findTasksByUserAndStatus(
 			userId,
 			TaskStatus.DOING,
 			params.page,
@@ -80,7 +61,7 @@ export class TasksController {
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(
+		return this.tasksService.findTasksByUserAndStatus(
 			userId,
 			TaskStatus.DONE,
 			params.page,
@@ -90,7 +71,7 @@ export class TasksController {
 
 	@Post("/count")
 	async countTasks(@Body() body: CountTasksDto): Promise<number> {
-		return this.tasksService.count(body);
+		return this.tasksService.countTasks(body);
 	}
 
 	@Patch("/:id")

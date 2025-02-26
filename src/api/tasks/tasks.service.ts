@@ -17,6 +17,10 @@ export class TasksService {
 		private projectsService: ProjectsService,
 	) {}
 
+	private calculateSkip(pageSize, page): number {
+		return (page - 1) * pageSize;
+	}
+
 	/**
 	 * Retrieves a task by its UUID from the database
 	 *
@@ -39,21 +43,22 @@ export class TasksService {
 	}
 
 	/**
-	 * Retrieves a task by its UUID from the database
+	 * Retrieves a specific task based on the user UUID and task status from the database
 	 *
 	 * @param userId - The unique UUID of the user
 	 * @param status - The completion status of the task
-	 * @param take - The number of entities returned
-	 * @param skip - The offset from which entities are taken
+	 * @param page - The offset from which entities are taken (default 1)
+	 * @param pageSize - The number of entities returned (default 10)
 	 * @returns Promise that resolves to the found Task entity
 	 */
-	async findByUserAndStatus(
+	async findTasksByUserAndStatus(
 		userId: string,
 		status: TaskStatus,
-		take?: number,
-		skip?: number,
+		page = 1,
+		pageSize = 10,
 	): Promise<Task[]> {
 		const user = await this.usersService.findById(userId);
+		const skip = this.calculateSkip(pageSize, page);
 
 		return this.taskRepository.find({
 			select: {
@@ -62,11 +67,11 @@ export class TasksService {
 				description: true,
 				status: true,
 				createdAt: true,
-				project: { name: true },
+				project: { id: true, name: true },
 			},
 			relations: { project: true },
 			where: { user, status },
-			take,
+			take: pageSize,
 			skip,
 		});
 	}
