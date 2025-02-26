@@ -52,7 +52,7 @@ export class UsersService {
 	 * @returns Promise that resolves to the created User entity
 	 * @throws {BadRequestException} - If a user with the given email already exist
 	 */
-	async create(payload: CreateUserDto): Promise<User> {
+	async createUser(payload: CreateUserDto): Promise<User> {
 		const user = await this.findByEmail(payload.email);
 		if (user) throw new BadRequestException("Email is already taken");
 
@@ -73,7 +73,7 @@ export class UsersService {
 	 * @param attrs - Attributes of the User entity to update
 	 * @returns Promise that resolves to the updated User entity
 	 */
-	async update(id: string, attrs: UpdateUserDto): Promise<User> {
+	async updateUser(id: string, attrs: UpdateUserDto): Promise<User> {
 		const user = await this.findById(id);
 
 		const newUser = { ...user, ...attrs };
@@ -86,7 +86,7 @@ export class UsersService {
 	 * @param id - The unique UUID of the user
 	 * @returns Promise that resolves to the updated User entity
 	 */
-	async delete(id: string): Promise<User> {
+	async deleteUser(id: string): Promise<User> {
 		const user = await this.findById(id);
 		return this.userRepository.remove(user);
 	}

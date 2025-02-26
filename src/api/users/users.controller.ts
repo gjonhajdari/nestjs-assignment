@@ -24,7 +24,7 @@ export class UsersController {
 
 	@Post()
 	async createUser(@Body() body: CreateUserDto): Promise<User> {
-		return this.usersService.create(body);
+		return this.usersService.createUser(body);
 	}
 
 	@Patch("/:id")
@@ -32,11 +32,11 @@ export class UsersController {
 		@Param("id", ParseUUIDPipe) id: string,
 		@Body() body: UpdateUserDto,
 	): Promise<User> {
-		return this.usersService.update(id, body);
+		return this.usersService.updateUser(id, body);
 	}
 
 	@Delete("/:id")
 	async deleteUser(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
-		return this.usersService.delete(id);
+		return this.usersService.deleteUser(id);
 	}
 }
