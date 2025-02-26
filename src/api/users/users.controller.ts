@@ -4,10 +4,10 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseUUIDPipe,
 	Patch,
 	Post,
 } from "@nestjs/common";
-import { AddUserToProjectDto } from "./dtos/add-user-to-project.dto";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { User } from "./user.entity";
@@ -27,21 +27,16 @@ export class UsersController {
 		return this.usersService.create(body);
 	}
 
-	@Patch()
-	async addUserToProject(@Body() body: AddUserToProjectDto): Promise<User> {
-		return this.usersService.addToProject(body.userId, body.projectId);
-	}
-
 	@Patch("/:id")
 	async updateUser(
-		@Param("id") id: string,
+		@Param("id", ParseUUIDPipe) id: string,
 		@Body() body: UpdateUserDto,
 	): Promise<User> {
-		return this.usersService.update(Number.parseInt(id), body);
+		return this.usersService.update(id, body);
 	}
 
 	@Delete("/:id")
-	async deleteUser(@Param("id") id: string): Promise<User> {
-		return this.usersService.delete(Number.parseInt(id));
+	async deleteUser(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
+		return this.usersService.delete(id);
 	}
 }
