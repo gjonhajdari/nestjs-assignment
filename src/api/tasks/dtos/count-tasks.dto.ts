@@ -1,9 +1,9 @@
-import { IsEnum, IsInt } from "class-validator";
+import { IsEnum, IsUUID } from "class-validator";
 import { TaskStatus } from "../task.entity";
 
 export class CountTasksDto {
-	@IsInt()
-	userId: number;
+	@IsUUID()
+	userId: string;
 
 	@IsEnum(TaskStatus)
 	status: TaskStatus;
