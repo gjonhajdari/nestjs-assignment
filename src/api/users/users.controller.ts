@@ -8,6 +8,7 @@ import {
 	Patch,
 	Post,
 } from "@nestjs/common";
+import { EmailValidationPipe } from "../pipes/email.pipe";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { User } from "./user.entity";
@@ -18,7 +19,9 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Get("/:email")
-	async findUser(@Param("email") email: string): Promise<User | null> {
+	async findUser(
+		@Param("email", EmailValidationPipe) email: string,
+	): Promise<User | null> {
 		return this.usersService.findByEmail(email, true);
 	}
 
