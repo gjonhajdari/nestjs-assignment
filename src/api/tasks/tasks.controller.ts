@@ -30,40 +30,14 @@ export class TasksController {
 		return this.tasksService.createTask(body);
 	}
 
-	@Get("/todo/:userId")
+	@Get("/user/:userId")
 	async findTodo(
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
 		return this.tasksService.findTasksByUserAndStatus(
 			userId,
-			TaskStatus.TODO,
-			params.page,
-			params.pageSize,
-		);
-	}
-
-	@Get("/doing/:userId")
-	async findDoing(
-		@Param("userId", ParseUUIDPipe) userId: string,
-		@Query() params: PaginationDto,
-	): Promise<Task[]> {
-		return this.tasksService.findTasksByUserAndStatus(
-			userId,
-			TaskStatus.DOING,
-			params.page,
-			params.pageSize,
-		);
-	}
-
-	@Get("/done/:userId")
-	async findDone(
-		@Param("userId", ParseUUIDPipe) userId: string,
-		@Query() params: PaginationDto,
-	): Promise<Task[]> {
-		return this.tasksService.findTasksByUserAndStatus(
-			userId,
-			TaskStatus.DONE,
+			params.status,
 			params.page,
 			params.pageSize,
 		);

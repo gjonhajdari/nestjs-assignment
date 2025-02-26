@@ -1,7 +1,11 @@
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Min } from "class-validator";
+import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
+import { TaskStatus } from "../task.entity";
 
 export class PaginationDto {
+	@IsEnum(TaskStatus)
+	status: TaskStatus;
+
 	@IsInt()
 	@Type(() => Number)
 	@Min(1)
