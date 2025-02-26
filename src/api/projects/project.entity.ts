@@ -36,6 +36,7 @@ export class Project {
 	@ManyToMany(
 		() => User,
 		(user) => user.projects,
+		{ onDelete: "CASCADE" },
 	)
 	users: User[];
 }

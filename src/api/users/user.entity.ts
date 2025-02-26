@@ -35,6 +35,7 @@ export class User {
 	@ManyToMany(
 		() => Project,
 		(project) => project.users,
+		{ onDelete: "CASCADE" },
 	)
 	@JoinTable({
 		name: "user_projects",
