@@ -2,6 +2,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -44,12 +45,16 @@ export class Task {
 	@ManyToOne(
 		() => Project,
 		(project) => project.tasks,
+		{ nullable: true, onDelete: "SET NULL" },
 	)
+	@JoinColumn({ name: "projectId" })
 	project: Project;
 
 	@ManyToOne(
 		() => User,
 		(user) => user.tasks,
+		{ nullable: true, onDelete: "SET NULL" },
 	)
+	@JoinColumn({ name: "userId" })
 	user: User;
 }
