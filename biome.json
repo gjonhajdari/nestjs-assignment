@@ -7,7 +7,8 @@
 	"linter": {
 		"rules": {
 			"style": {
-				"useImportType": "off"
+				"useImportType": "off",
+				"noParameterAssign": "off"
 			}
 		}
 	}
