@@ -18,8 +18,13 @@ import { UsersService } from "./users.service";
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
-	@Get("/:email")
-	async findUser(
+	@Get("/:id")
+	async findUser(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
+		return this.usersService.findById(id);
+	}
+
+	@Get("/email/:email")
+	async findUserByEmail(
 		@Param("email", EmailValidationPipe) email: string,
 	): Promise<User | null> {
 		return this.usersService.findByEmail(email, true);
