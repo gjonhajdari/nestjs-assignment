@@ -112,11 +112,8 @@ export class TasksService {
 			status: payload.status,
 		});
 
-		const user = await this.usersService.findById(payload.userId);
-		const project = await this.projectsService.findById(payload.projectId);
-
-		task.user = user;
-		task.project = project;
+		task.user = await this.usersService.findById(payload.userId);
+		task.project = await this.projectsService.findById(payload.projectId);
 
 		return this.dbUtilsService.executeSafely(() =>
 			this.taskRepository.save(task),
@@ -134,21 +131,17 @@ export class TasksService {
 		const task = await this.findById(id);
 
 		if (attrs.userId) {
-			const user = await this.usersService.findById(attrs.userId);
-			task.user = user;
+			task.user = await this.usersService.findById(attrs.userId);
 			attrs = omit(attrs, "userId");
 		}
 
 		if (attrs.projectId) {
-			const project = await this.projectsService.findById(attrs.projectId);
-			task.project = project;
+			task.project = await this.projectsService.findById(attrs.projectId);
 			attrs = omit(attrs, "projectId");
 		}
 
-		const updatedTask = { ...task, ...attrs };
-
 		return this.dbUtilsService.executeSafely(() =>
-			this.taskRepository.save(updatedTask),
+			this.taskRepository.save({ ...task, ...attrs }),
 		);
 	}
 

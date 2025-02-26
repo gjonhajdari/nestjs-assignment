@@ -78,14 +78,12 @@ export class ProjectsService {
 
 		if (attrs.userId) {
 			const user = await this.usersService.findById(attrs.userId);
-			project.users = [user];
+			project.users.push(user);
 			attrs = omit(attrs, "userId");
 		}
 
-		const updatedProject = { ...project, ...attrs };
-
 		return this.dbUtilsService.executeSafely(() =>
-			this.projectRepository.save(updatedProject),
+			this.projectRepository.save({ ...project, ...attrs }),
 		);
 	}
 

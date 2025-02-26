@@ -75,10 +75,9 @@ export class UsersService {
 	 */
 	async updateUser(id: string, attrs: UpdateUserDto): Promise<User> {
 		const user = await this.findById(id);
-		const newUser = { ...user, ...attrs };
 
 		return this.dbUtilsService.executeSafely(() =>
-			this.userRepository.save(newUser),
+			this.userRepository.save({ ...user, ...attrs }),
 		);
 	}
 
