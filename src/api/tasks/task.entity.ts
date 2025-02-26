@@ -17,8 +17,8 @@ export enum TaskStatus {
 
 @Entity()
 export class Task {
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
 
 	@Column()
 	name: string;

@@ -12,8 +12,8 @@ import { User } from "../users/user.entity";
 
 @Entity()
 export class Project {
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
 
 	@Column()
 	name: string;
