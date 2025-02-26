@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
-import { Project } from "src/api/projects/project.entity";
-import { Task } from "src/api/tasks/task.entity";
-import { User } from "src/api/users/user.entity";
-dotenv.config();
+
+dotenv.config({
+	path: `.env.${process.env.NODE_ENV}`,
+});
 
 export const config = {
 	name: "default",
@@ -11,7 +11,7 @@ export const config = {
 	port: process.env.TYPEORM_PORT || 5432,
 	username: process.env.TYPEORM_USERNAME,
 	password: process.env.TYPEORM_PASSWORD,
-	database: `${process.env.TYPEORM_DATABASE}_${process.env.NODE_ENV}`,
+	database: process.env.TYPEORM_DATABASE,
 	entities: [process.env.TYPEORM_ENTITIES],
 	synchronize: true,
 	dropSchema: false,
@@ -24,8 +24,8 @@ export const configNoSynchronize = {
 	port: process.env.TYPEORM_PORT || 5432,
 	username: process.env.TYPEORM_USERNAME,
 	password: process.env.TYPEORM_PASSWORD,
-	database: `${process.env.TYPEORM_DATABASE}_${process.env.NODE_ENV}`,
-	entities: [User, Project, Task],
+	database: process.env.TYPEORM_DATABASE,
+	entities: [process.env.TYPEORM_ENTITIES],
 	migrations: [process.env.TYPEORM_MIGRATIONS],
 	migrationsRun: false,
 	synchronize: false,
