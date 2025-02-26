@@ -4,12 +4,12 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseEnumPipe,
 	ParseUUIDPipe,
 	Patch,
 	Post,
 	Query,
 } from "@nestjs/common";
-import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
@@ -69,9 +69,12 @@ export class TasksController {
 		);
 	}
 
-	@Post("/count")
-	async countTasks(@Body() body: CountTasksDto): Promise<number> {
-		return this.tasksService.countTasks(body);
+	@Get("/count/:userId")
+	async countTasks(
+		@Param("userId", ParseUUIDPipe) userId: string,
+		@Query("status", new ParseEnumPipe(TaskStatus)) status: TaskStatus,
+	): Promise<number> {
+		return this.tasksService.countTasks(userId, status);
 	}
 
 	@Patch("/:id")

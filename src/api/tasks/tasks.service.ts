@@ -4,7 +4,6 @@ import { omit } from "lodash";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
-import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
 import { Task, TaskStatus } from "./task.entity";
@@ -84,10 +83,10 @@ export class TasksService {
 	 * @param payload - Object containing the user UUID and task status
 	 * @returns Promise that resolves to the number of tasks
 	 */
-	async countTasks(payload: CountTasksDto): Promise<number> {
-		const user = await this.usersService.findById(payload.userId);
+	async countTasks(userId: string, status: TaskStatus): Promise<number> {
+		const user = await this.usersService.findById(userId);
 		return this.taskRepository.count({
-			where: { user, status: payload.status },
+			where: { user, status },
 		});
 	}
 
