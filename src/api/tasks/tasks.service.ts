@@ -82,12 +82,11 @@ export class TasksService {
 	 * @param payload - Object containing the user UUID and task status
 	 * @returns Promise that resolves to the number of tasks
 	 */
-	async count(payload: CountTasksDto): Promise<number> {
-		const tasks = await this.findByUserAndStatus(
-			payload.userId,
-			payload.status,
-		);
-		return tasks.length;
+	async countTasks(payload: CountTasksDto): Promise<number> {
+		const user = await this.usersService.findById(payload.userId);
+		return this.taskRepository.count({
+			where: { user, status: payload.status },
+		});
 	}
 
 	/**
