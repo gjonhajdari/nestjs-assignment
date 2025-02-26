@@ -72,7 +72,7 @@ export class UsersService {
 		const user = await this.findById(id);
 
 		const newUser = { ...user, ...attrs };
-		return this.userRepository.save(user);
+		return this.userRepository.save(newUser);
 	}
 
 	/**
