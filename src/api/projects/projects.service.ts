@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
+import { DbUtilsService } from "src/common/services/db-utils.service";
 import { Repository } from "typeorm";
 import { UsersService } from "../users/users.service";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
@@ -15,6 +16,7 @@ export class ProjectsService {
 	constructor(
 		@InjectRepository(Project) private projectRepository: Repository<Project>,
 		private usersService: UsersService,
+		private dbUtilsService: DbUtilsService,
 	) {}
 
 	/**
@@ -59,7 +61,9 @@ export class ProjectsService {
 	 */
 	async createProject(name: string, description: string): Promise<Project> {
 		const project = await this.projectRepository.create({ name, description });
-		return this.projectRepository.save(project);
+		return this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.save(project),
+		);
 	}
 
 	/**
@@ -79,7 +83,10 @@ export class ProjectsService {
 		}
 
 		const updatedProject = { ...project, ...attrs };
-		return this.projectRepository.save(updatedProject);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.save(updatedProject),
+		);
 	}
 
 	/**
@@ -99,7 +106,10 @@ export class ProjectsService {
 		}
 
 		project.users.push(user);
-		return this.projectRepository.save(project);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.save(project),
+		);
 	}
 
 	/**
@@ -110,6 +120,9 @@ export class ProjectsService {
 	 */
 	async deleteProject(id: string) {
 		const project = await this.findById(id);
-		return this.projectRepository.remove(project);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.remove(project),
+		);
 	}
 }
