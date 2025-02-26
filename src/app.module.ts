@@ -13,6 +13,7 @@ import { UsersModule } from "./api/users/users.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { config } from "./config/data-source.config";
+import { CommonModule } from './common/common.module';
 
 @Module({
 	imports: [
@@ -39,6 +40,7 @@ import { config } from "./config/data-source.config";
 		UsersModule,
 		ProjectsModule,
 		TasksModule,
+		CommonModule,
 	],
 	controllers: [AppController],
 	providers: [
