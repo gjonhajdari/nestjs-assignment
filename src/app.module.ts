@@ -3,17 +3,15 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD, APP_PIPE } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSourceOptions } from "typeorm";
+import { AuthModule } from "./api/auth/auth.module";
 import { AuthGuard } from "./api/guards/auth.guard";
-import { Project } from "./api/projects/project.entity";
 import { ProjectsModule } from "./api/projects/projects.module";
-import { Task } from "./api/tasks/task.entity";
 import { TasksModule } from "./api/tasks/tasks.module";
-import { User } from "./api/users/user.entity";
 import { UsersModule } from "./api/users/users.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { CommonModule } from "./common/common.module";
 import { config } from "./config/data-source.config";
-import { CommonModule } from './common/common.module';
 
 @Module({
 	imports: [
@@ -41,6 +39,7 @@ import { CommonModule } from './common/common.module';
 		ProjectsModule,
 		TasksModule,
 		CommonModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [
