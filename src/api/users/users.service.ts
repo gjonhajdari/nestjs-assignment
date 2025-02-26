@@ -1,9 +1,11 @@
 import {
 	BadRequestException,
 	Injectable,
+	InternalServerErrorException,
 	NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { DbUtilsService } from "src/common/services/db-utils.service";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
@@ -13,6 +15,7 @@ import { User } from "./user.entity";
 export class UsersService {
 	constructor(
 		@InjectRepository(User) private userRepository: Repository<User>,
+		private dbUtilsService: DbUtilsService,
 	) {}
 
 	/**
@@ -56,14 +59,11 @@ export class UsersService {
 		const user = await this.findByEmail(payload.email);
 		if (user) throw new BadRequestException("Email is already taken");
 
-		const newUser = await this.userRepository.create({
-			firstName: payload.firstName,
-			lastName: payload.lastName,
-			email: payload.email,
-			location: payload.location,
-		});
+		const newUser = await this.userRepository.create(payload);
 
-		return this.userRepository.save(newUser);
+		return this.dbUtilsService.executeSafely(() =>
+			this.userRepository.save(newUser),
+		);
 	}
 
 	/**
@@ -75,9 +75,11 @@ export class UsersService {
 	 */
 	async updateUser(id: string, attrs: UpdateUserDto): Promise<User> {
 		const user = await this.findById(id);
-
 		const newUser = { ...user, ...attrs };
-		return this.userRepository.save(newUser);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.userRepository.save(newUser),
+		);
 	}
 
 	/**
@@ -88,6 +90,9 @@ export class UsersService {
 	 */
 	async deleteUser(id: string): Promise<User> {
 		const user = await this.findById(id);
-		return this.userRepository.remove(user);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.userRepository.remove(user),
+		);
 	}
 }
