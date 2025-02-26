@@ -25,6 +25,8 @@ export class TasksService {
 	 * Retrieves a task by its UUID from the database
 	 *
 	 * @param id - The unique UUID of the task
+	 * @param loadUser - If we want to also return the associated user
+	 * @param loadProject - If we want to also return the associated project
 	 * @returns Promise that resolves to the found Task entity
 	 * @throws {NotFoundException} - If no task is found with the given UUID
 	 */
