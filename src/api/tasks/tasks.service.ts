@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
+import { DbUtilsService } from "src/common/services/db-utils.service";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
@@ -14,8 +15,16 @@ export class TasksService {
 		@InjectRepository(Task) private taskRepository: Repository<Task>,
 		private usersService: UsersService,
 		private projectsService: ProjectsService,
+		private dbUtilsService: DbUtilsService,
 	) {}
 
+	/**
+	 * Calculates the offset needed for pagination
+	 *
+	 * @param pageSize - Number of items to display per page
+	 * @param page - Current page number (starting from 1)
+	 * @returns offset (skip)
+	 */
 	private calculateSkip(pageSize, page): number {
 		return (page - 1) * pageSize;
 	}
@@ -108,7 +117,10 @@ export class TasksService {
 
 		task.user = user;
 		task.project = project;
-		return this.taskRepository.save(task);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.save(task),
+		);
 	}
 
 	/**
@@ -134,7 +146,10 @@ export class TasksService {
 		}
 
 		const updatedTask = { ...task, ...attrs };
-		return this.taskRepository.save(updatedTask);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.save(updatedTask),
+		);
 	}
 
 	/**
@@ -145,6 +160,9 @@ export class TasksService {
 	 */
 	async deleteTask(id: string): Promise<Task> {
 		const task = await this.findById(id);
-		return this.taskRepository.remove(task);
+
+		return this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.remove(task),
+		);
 	}
 }
