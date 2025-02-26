@@ -1,6 +1,6 @@
 # Nest Assignment
 
-REST API build with Nest.js, PostgreSQL, and TypeORM.
+REST API build with Nest.js, PostgreSQL, and TypeORM. Documentation on how to use the API can be found [here](API_DOCUMENTATION.md).
 
 # Project setup
 
