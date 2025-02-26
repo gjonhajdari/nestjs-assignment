@@ -34,9 +34,14 @@ export class UsersService {
 	 *
 	 * @param email - The unique email of the user
 	 * @returns Promise that resolves to the found User entity or a null value
+	 * @throws {NotFoundException} - If a user with the given email doesn't exist (optional)
 	 */
-	async findByEmail(email: string): Promise<User | null> {
+	async findByEmail(email: string, throwsError = false): Promise<User | null> {
 		const user = await this.userRepository.findOne({ where: { email } });
+
+		if (throwsError && !user)
+			throw new NotFoundException(`User with email '${email} not found'`);
+
 		return user;
 	}
 
