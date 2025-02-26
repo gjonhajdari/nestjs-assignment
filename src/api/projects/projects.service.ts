@@ -4,6 +4,7 @@ import {
 	NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { omit } from "lodash";
 import { Repository } from "typeorm";
 import { UsersService } from "../users/users.service";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
@@ -68,9 +69,18 @@ export class ProjectsService {
 	 * @param attrs - Attributes of the Project entity to update
 	 * @returns Promise that resolves to the updated Project entity
 	 */
-	async update(id: number, attrs: Partial<Project>) {
+	async update(id: string, attrs: UpdateProjectDto) {
 		const project = await this.findById(id);
 
+		if (attrs.userId) {
+			const user = await this.usersService.findById(attrs.userId);
+			project.users = [user];
+			attrs = omit(attrs, "userId");
+		}
+
+		const updatedProject = { ...project, ...attrs };
+		return this.projectRepository.save(updatedProject);
+	}
 
 	/**
 	 * Adds a user to a specific project
