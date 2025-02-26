@@ -1,9 +1,9 @@
-import { IsInt } from "class-validator";
+import { IsUUID } from "class-validator";
 
 export class AddUserToProjectDto {
-	@IsInt()
-	projectId: number;
+	@IsUUID()
+	userId: string;
 
-	@IsInt()
-	userId: number;
+	@IsUUID()
+	projectId: string;
 }
