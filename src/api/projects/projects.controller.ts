@@ -8,8 +8,8 @@ import {
 	Patch,
 	Post,
 } from "@nestjs/common";
-import { AddUserToProjectDto } from "../users/dtos/add-user-to-project.dto";
 import { CreateProjectDto } from "./dtos/create-project.dto";
+import { ManageProjectUsersDto } from "./dtos/manage-project-users.dto";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { Project } from "./project.entity";
 import { ProjectsService } from "./projects.service";
@@ -33,9 +33,18 @@ export class ProjectsController {
 		return this.projectsService.createProject(body.name, body.description);
 	}
 
-	@Patch()
-	async addUserToProject(@Body() body: AddUserToProjectDto): Promise<Project> {
-		return this.projectsService.addUser(body.projectId, body.userId);
+	@Patch("/add")
+	async addUserToProject(
+		@Body() body: ManageProjectUsersDto,
+	): Promise<Project> {
+		return this.projectsService.addUser(body);
+	}
+
+	@Patch("/remove")
+	async removeUserFromProject(
+		@Body() body: ManageProjectUsersDto,
+	): Promise<Project> {
+		return this.projectsService.removeUser(body);
 	}
 
 	@Patch("/:id")
