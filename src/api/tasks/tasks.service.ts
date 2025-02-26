@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { omit } from "lodash";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
 import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
+import { UpdateTaskDto } from "./dtos/update-tesk.dto";
 import { Task, TaskStatus } from "./task.entity";
 
 @Injectable()
@@ -107,15 +109,27 @@ export class TasksService {
 	/**
 	 * Updates a specific task with the new given attributes
 	 *
-	 * @param id - The unique ID of the task
-	 * @param attrs - Attributes of the Task entity to update
+	 * @param id - The unique UUID of the task
+	 * @param attrs - Attributes of the Task entity to update, with optional user and project UUIDs
 	 * @returns Promise that resolves to the updated Task entity
 	 */
-	async update(id: number, attrs: Partial<Task>): Promise<Task> {
+	async update(id: string, attrs: UpdateTaskDto): Promise<Task> {
 		const task = await this.findById(id);
 
-		Object.assign(task, attrs);
-		return this.taskRepository.save(task);
+		if (attrs.userId) {
+			const user = await this.usersService.findById(attrs.userId);
+			task.user = user;
+			attrs = omit(attrs, "userId");
+		}
+
+		if (attrs.projectId) {
+			const project = await this.projectsService.findById(attrs.projectId);
+			task.project = project;
+			attrs = omit(attrs, "projectId");
+		}
+
+		const updatedTask = { ...task, ...attrs };
+		return this.taskRepository.save(updatedTask);
 	}
 
 	/**
