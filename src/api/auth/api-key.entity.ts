@@ -1,15 +1,9 @@
 import * as crypto from "node:crypto";
-import {
-	BeforeInsert,
-	Column,
-	Entity,
-	PrimaryColumn,
-	PrimaryGeneratedColumn,
-} from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class ApiKey {
-	@PrimaryColumn("varchar", { length: 40 })
+	@PrimaryColumn("varchar", { length: 40, unique: true })
 	id: string;
 
 	@Column({ default: true })

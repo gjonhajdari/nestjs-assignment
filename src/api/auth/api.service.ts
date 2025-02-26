@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ApiKey } from "./api-key.entity";
@@ -10,6 +10,13 @@ export class ApiService {
 	) {}
 
 	async findKey(key: string): Promise<ApiKey | null> {
-		return this.apiRepository.findOne({ where: { id: key } });
+		const apiKey = await this.apiRepository.findOne({ where: { id: key } });
+
+		if (!apiKey?.active)
+			throw new UnauthorizedException(
+				"Please provide a valid and active API Key",
+			);
+
+		return apiKey;
 	}
 }
