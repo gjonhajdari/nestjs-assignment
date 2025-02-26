@@ -16,30 +16,37 @@ export class TasksService {
 	) {}
 
 	/**
-	 * Retrieves a task by its ID from the database
+	 * Retrieves a task by its UUID from the database
 	 *
-	 * @param id - The unique id of the task
+	 * @param id - The unique UUID of the task
 	 * @returns Promise that resolves to the found Task entity
-	 * @throws {NotFoundException} - If no task is found with the given ID
+	 * @throws {NotFoundException} - If no task is found with the given UUID
 	 */
-	async findById(id: number): Promise<Task> {
-		const task = await this.taskRepository.findOne({ where: { id } });
+	async findById(
+		id: string,
+		loadUser = false,
+		loadProject = false,
+	): Promise<Task> {
+		const task = await this.taskRepository.findOne({
+			where: { id },
+			relations: { user: loadUser, project: loadProject },
+		});
 		if (!task) throw new NotFoundException("Task does not exist");
 
 		return task;
 	}
 
 	/**
-	 * Retrieves a task by its ID from the database
+	 * Retrieves a task by its UUID from the database
 	 *
-	 * @param userId - The unique id of the user
+	 * @param userId - The unique UUID of the user
 	 * @param status - The completion status of the task
 	 * @param take - The number of entities returned
 	 * @param skip - The offset from which entities are taken
 	 * @returns Promise that resolves to the found Task entity
 	 */
 	async findByUserAndStatus(
-		userId: number,
+		userId: string,
 		status: TaskStatus,
 		take?: number,
 		skip?: number,
@@ -65,7 +72,7 @@ export class TasksService {
 	/**
 	 * Retrieves the amount of tasks assigned to a user based on the status
 	 *
-	 * @param payload - Object containing the user ID and task status
+	 * @param payload - Object containing the user UUID and task status
 	 * @returns Promise that resolves to the number of tasks
 	 */
 	async count(payload: CountTasksDto): Promise<number> {
@@ -79,7 +86,7 @@ export class TasksService {
 	/**
 	 * Creates a new task and saves it to the database
 	 *
-	 * @param payload - The required information to create a task, and the associated user ID and project ID
+	 * @param payload - The required information to create a task, and the associated user UUID and project UUID
 	 * @returns Promise that resolves to the created Task entity
 	 */
 	async create(payload: CreateTaskDto): Promise<Task> {
@@ -112,12 +119,12 @@ export class TasksService {
 	}
 
 	/**
-	 * Deletes a task by its ID from the database
+	 * Deletes a task by its UUID from the database
 	 *
-	 * @param id - The unique ID of the task
+	 * @param id - The unique UUID of the task
 	 * @returns Promise that resolves to the updated Task entity
 	 */
-	async delete(id: number): Promise<Task> {
+	async delete(id: string): Promise<Task> {
 		const task = await this.findById(id);
 		return this.taskRepository.remove(task);
 	}

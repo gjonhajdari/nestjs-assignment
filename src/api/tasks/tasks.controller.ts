@@ -4,11 +4,10 @@ import {
 	Delete,
 	Get,
 	Param,
-	ParseIntPipe,
+	ParseUUIDPipe,
 	Patch,
 	Post,
 	Query,
-	UseGuards,
 } from "@nestjs/common";
 import { CountTasksDto } from "./dtos/count-tasks.dto";
 import { CreateTaskDto } from "./dtos/create-task.dto";
@@ -26,17 +25,22 @@ export class TasksController {
 	}
 
 	async findTasks(
-		id: number,
+		userId: string,
 		status: TaskStatus,
 		page = 1,
 		pageSize = 10,
 	): Promise<Task[]> {
 		const skip = this.calculateSkip(page, pageSize);
-		return this.tasksService.findByUserAndStatus(id, status, pageSize, skip);
+		return this.tasksService.findByUserAndStatus(
+			userId,
+			status,
+			pageSize,
+			skip,
+		);
 	}
 
 	@Get("/:id")
-	async findById(@Param("id", ParseIntPipe) id: number): Promise<Task> {
+	async findById(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
 		return this.tasksService.findById(id);
 	}
 
@@ -45,28 +49,43 @@ export class TasksController {
 		return this.tasksService.create(body);
 	}
 
-	@Get("/todo/:id")
+	@Get("/todo/:userId")
 	async findTodo(
-		@Param("id", ParseIntPipe) id: number,
+		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(id, TaskStatus.TODO, params.page, params.pageSize);
+		return this.findTasks(
+			userId,
+			TaskStatus.TODO,
+			params.page,
+			params.pageSize,
+		);
 	}
 
-	@Get("/doing/:id")
+	@Get("/doing/:userId")
 	async findDoing(
-		@Param("id", ParseIntPipe) id: number,
+		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(id, TaskStatus.DOING, params.page, params.pageSize);
+		return this.findTasks(
+			userId,
+			TaskStatus.DOING,
+			params.page,
+			params.pageSize,
+		);
 	}
 
-	@Get("/done/:id")
+	@Get("/done/:userId")
 	async findDone(
-		@Param("id", ParseIntPipe) id: number,
+		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.findTasks(id, TaskStatus.DONE, params.page, params.pageSize);
+		return this.findTasks(
+			userId,
+			TaskStatus.DONE,
+			params.page,
+			params.pageSize,
+		);
 	}
 
 	@Post("/count")
@@ -76,14 +95,14 @@ export class TasksController {
 
 	@Patch("/:id")
 	async updateTask(
-		@Param("id", ParseIntPipe) id: number,
+		@Param("id", ParseUUIDPipe) id: string,
 		@Body() body: UpdateTaskDto,
 	): Promise<Task> {
 		return this.tasksService.update(id, body);
 	}
 
 	@Delete("/:id")
-	async deleteTask(@Param("id", ParseIntPipe) id: number): Promise<Task> {
+	async deleteTask(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
 		return this.tasksService.delete(id);
 	}
 }
