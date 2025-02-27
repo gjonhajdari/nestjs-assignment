@@ -26,6 +26,9 @@ export class User {
 	@Column()
 	location: string;
 
+	@Column({ nullable: true })
+	deletedAt: Date;
+
 	@OneToMany(
 		() => Task,
 		(task) => task.user,

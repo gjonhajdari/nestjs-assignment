@@ -28,7 +28,9 @@ export class UsersService {
 	 */
 	async findById(id: string): Promise<User> {
 		const user = await this.userRepository.findOne({ where: { id } });
-		if (!user) throw new NotFoundException("User does not exist");
+
+		if (!user || user.deletedAt)
+			throw new NotFoundException("User does not exist");
 
 		return user;
 	}
@@ -96,9 +98,10 @@ export class UsersService {
 	 */
 	async deleteUser(id: string): Promise<DeleteStatus> {
 		const user = await this.findById(id);
+		user.deletedAt = new Date();
 
 		await this.dbUtilsService.executeSafely(() =>
-			this.userRepository.remove(user),
+			this.userRepository.save(user),
 		);
 
 		return { deleted: true, message: "User deleted successfully" };
