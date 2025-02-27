@@ -31,16 +31,11 @@ export class TasksController {
 	}
 
 	@Get("/user/:userId")
-	async findTodo(
+	async findTasks(
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query() params: PaginationDto,
 	): Promise<Task[]> {
-		return this.tasksService.findTasksByUserAndStatus(
-			userId,
-			params.status,
-			params.page,
-			params.pageSize,
-		);
+		return this.tasksService.findTasksByUserAndStatus(userId, params);
 	}
 
 	@Get("/count/:userId")

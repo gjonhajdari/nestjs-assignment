@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
 import { CreateTaskDto } from "./dtos/create-task.dto";
+import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
 import { Task, TaskStatus } from "./task.entity";
 
@@ -63,10 +64,11 @@ export class TasksService {
 	 */
 	async findTasksByUserAndStatus(
 		userId: string,
-		status: TaskStatus,
-		page = 1,
-		pageSize = 10,
+		params?: PaginationDto,
 	): Promise<Task[]> {
+		const page = params?.page || 1;
+		const pageSize = params?.pageSize || 10;
+
 		const user = await this.usersService.findById(userId);
 		const skip = this.calculateSkip(pageSize, page);
 
@@ -80,7 +82,7 @@ export class TasksService {
 				project: { id: true, name: true },
 			},
 			relations: { project: true },
-			where: { user, status },
+			where: { user, status: params?.status },
 			take: pageSize,
 			skip,
 		});
