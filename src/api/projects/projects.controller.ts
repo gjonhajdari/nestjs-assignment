@@ -19,7 +19,9 @@ export class ProjectsController {
 	constructor(private readonly projectsService: ProjectsService) {}
 
 	@Get("/:id")
-	async findProject(@Param("id", ParseUUIDPipe) id: string): Promise<Project> {
+	async findProjectById(
+		@Param("id", ParseUUIDPipe) id: string,
+	): Promise<Project> {
 		return this.projectsService.findById(id);
 	}
 

@@ -19,7 +19,7 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Get("/:id")
-	async findUser(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
+	async findUserById(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
 		return this.usersService.findById(id);
 	}
 

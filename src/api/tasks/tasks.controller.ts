@@ -21,7 +21,7 @@ export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}
 
 	@Get("/:id")
-	async findById(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
+	async findTaskById(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
 		return this.tasksService.findById(id);
 	}
 
