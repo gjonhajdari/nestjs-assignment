@@ -45,8 +45,14 @@ export class ProjectsService {
 	 * @returns Promise that resolves to the found Project entity
 	 * @throws {NotFoundException} - If no project is found with the given name
 	 */
-	async findByName(name: string): Promise<Project> {
-		const project = await this.projectRepository.findOne({ where: { name } });
+	async findByName(name: string, userId: string): Promise<Project[]> {
+		await this.usersService.findById(userId);
+
+		const project = await this.projectRepository.find({
+			where: { name, users: { id: userId } },
+			relations: { users: true },
+		});
+
 		if (!project)
 			throw new NotFoundException(`Project '${name}' does not exist`);
 

@@ -7,6 +7,7 @@ import {
 	ParseUUIDPipe,
 	Patch,
 	Post,
+	Query,
 } from "@nestjs/common";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import { ManageProjectUsersDto } from "./dtos/manage-project-users.dto";
@@ -26,8 +27,11 @@ export class ProjectsController {
 	}
 
 	@Get("/name/:name")
-	async findProjectByName(@Param("name") name: string): Promise<Project> {
-		return this.projectsService.findByName(name);
+	async findProjectByName(
+		@Param("name") name: string,
+		@Query("userId", ParseUUIDPipe) userId: string,
+	): Promise<Project[]> {
+		return this.projectsService.findByName(name, userId);
 	}
 
 	@Post()
