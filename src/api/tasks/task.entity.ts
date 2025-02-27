@@ -23,7 +23,7 @@ export class Task {
 	description: string;
 
 	@Column({
-		type: "enum",
+		type: "simple-enum",
 		enum: TaskStatus,
 		default: TaskStatus.TODO,
 	})
