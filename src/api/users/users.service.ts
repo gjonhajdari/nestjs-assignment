@@ -86,7 +86,7 @@ export class UsersService {
 	 * Deletes a user by its UUID from the database
 	 *
 	 * @param id - The unique UUID of the user
-	 * @returns Promise that resolves to the updated User entity
+	 * @returns Promise that resolves to the DeleteStatus type
 	 */
 	async deleteUser(id: string): Promise<DeleteStatus> {
 		const user = await this.findById(id);

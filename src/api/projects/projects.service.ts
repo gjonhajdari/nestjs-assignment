@@ -161,7 +161,7 @@ export class ProjectsService {
 	 * Deletes a project by its UUID from the database
 	 *
 	 * @param id - The unique UUID of the project
-	 * @returns Promise that resolves to the updated Project entity
+	 * @returns Promise that resolves to the DeleteStatus type
 	 */
 	async deleteProject(id: string): Promise<DeleteStatus> {
 		const project = await this.findById(id);
