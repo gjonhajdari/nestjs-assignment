@@ -9,6 +9,8 @@ export class AuthGuard implements CanActivate {
 		const req: Request = context.switchToHttp().getRequest();
 		const providedKey = req.headers["x-api-key"] as string;
 
+		console.log("AUTH GUARD");
+
 		if (!providedKey) return false;
 
 		const key = await this.apiService.findKey(providedKey);
