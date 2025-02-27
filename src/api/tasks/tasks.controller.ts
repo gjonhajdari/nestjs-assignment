@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { DeleteStatus, TaskStatus } from "src/common/types";
 import { CreateTaskDto } from "./dtos/create-task.dto";
-import { PaginationDto } from "./dtos/pagination.dto";
+import { FindTasksDto } from "./dtos/find-tasks.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
 import { Task } from "./task.entity";
 import { TasksService } from "./tasks.service";
@@ -34,7 +34,7 @@ export class TasksController {
 	@Get("/user/:userId")
 	async findTasks(
 		@Param("userId", ParseUUIDPipe) userId: string,
-		@Query() params: PaginationDto,
+		@Query() params: FindTasksDto,
 	): Promise<Task[]> {
 		return this.tasksService.findTasksByUserAndStatus(userId, params);
 	}

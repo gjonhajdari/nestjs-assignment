@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
 import { CreateTaskDto } from "./dtos/create-task.dto";
-import { PaginationDto } from "./dtos/pagination.dto";
+import { FindTasksDto } from "./dtos/find-tasks.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
 import { Task } from "./task.entity";
 
@@ -65,7 +65,7 @@ export class TasksService {
 	 */
 	async findTasksByUserAndStatus(
 		userId: string,
-		params?: PaginationDto,
+		params?: FindTasksDto,
 	): Promise<Task[]> {
 		const page = params?.page || 1;
 		const pageSize = params?.pageSize || 10;
