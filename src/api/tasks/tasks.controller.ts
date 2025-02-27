@@ -10,11 +10,11 @@ import {
 	Post,
 	Query,
 } from "@nestjs/common";
-import { DeleteStatus } from "src/common/types";
+import { DeleteStatus, TaskStatus } from "src/common/types";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
-import { Task, TaskStatus } from "./task.entity";
+import { Task } from "./task.entity";
 import { TasksService } from "./tasks.service";
 
 @Controller("/tasks")

@@ -1,3 +1,4 @@
+import { TaskStatus } from "src/common/types";
 import {
 	Column,
 	CreateDateColumn,
@@ -9,14 +10,6 @@ import {
 } from "typeorm";
 import { Project } from "../projects/project.entity";
 import { User } from "../users/user.entity";
-
-export enum TaskStatus {
-	TODO = "TODO",
-	DOING = "DOING",
-	IN_REVIEW = "IN REVIEW",
-	DONE = "DONE",
-	DROPPED = "DROPPED",
-}
 
 @Entity()
 export class Task {

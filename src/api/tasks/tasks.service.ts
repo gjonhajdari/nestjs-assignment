@@ -2,14 +2,14 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
 import { DbUtilsService } from "src/common/services/db-utils.service";
-import { DeleteStatus } from "src/common/types";
+import { DeleteStatus, TaskStatus } from "src/common/types";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
-import { Task, TaskStatus } from "./task.entity";
+import { Task } from "./task.entity";
 
 @Injectable()
 export class TasksService {

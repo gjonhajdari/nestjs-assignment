@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
-import { TaskStatus } from "../task.entity";
+import { TaskStatus } from "src/common/types";
 
 export class PaginationDto {
 	@IsEnum(TaskStatus)
