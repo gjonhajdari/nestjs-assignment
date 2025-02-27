@@ -20,21 +20,6 @@ import { config } from "./config/data-source.config";
 			envFilePath: [`.env.${process.env.NODE_ENV}`],
 		}),
 		TypeOrmModule.forRoot(config as DataSourceOptions),
-		// TypeOrmModule.forRootAsync({
-		// 	inject: [ConfigService],
-		// 	useFactory: (config: ConfigService) => {
-		// 		return {
-		// 			type: "postgres",
-		// 			host: config.get("DB_HOST"),
-		// 			port: config.get("DB_PORT"),
-		// 			username: config.get("DB_USERNAME"),
-		// 			password: config.get("DB_PASSWORD"),
-		// 			database: config.get("DB_DATABASE"),
-		// 			entities: [User, Project, Task],
-		// 			synchronize: true,
-		// 		};
-		// 	},
-		// }),
 		UsersModule,
 		ProjectsModule,
 		TasksModule,
