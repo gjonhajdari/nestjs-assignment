@@ -38,7 +38,7 @@ export class Task {
 	@ManyToOne(
 		() => Project,
 		(project) => project.tasks,
-		{ nullable: true, onDelete: "SET NULL" },
+		{ nullable: true, onDelete: "CASCADE" },
 	)
 	@JoinColumn({ name: "projectId" })
 	project: Project;
