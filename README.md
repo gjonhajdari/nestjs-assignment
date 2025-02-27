@@ -48,7 +48,7 @@ Example request:
 ```http
 GET /users/example@email.com HTTP/1.1
 Host: localhost:3000/
-x-api-key: NYv3pGZ98QqoTjeXmU9rW6UcvdAivEwx
+x-api-key: ac70ca11-5d7f-4ca3-bede-fb1a06a36d28
 ```
 
 # Migrations
