@@ -12,10 +12,11 @@ export class ApiService {
 	async findKey(key: string): Promise<ApiKey | null> {
 		const apiKey = await this.apiRepository.findOne({ where: { id: key } });
 
-		if (!apiKey?.active)
+		if (!apiKey?.active) {
 			throw new UnauthorizedException(
 				"Please provide a valid and active API Key",
 			);
+		}
 
 		return apiKey;
 	}
