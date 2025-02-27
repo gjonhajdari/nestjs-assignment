@@ -37,6 +37,7 @@ export class UsersService {
 	 * Retrieves a user by its email address from the database
 	 *
 	 * @param email - The unique email of the user
+	 * @param throwsError - If we want to throw an error if a user wasn't found
 	 * @returns Promise that resolves to the found User entity or a null value
 	 * @throws {NotFoundException} - If a user with the given email doesn't exist (optional)
 	 */
@@ -76,6 +77,11 @@ export class UsersService {
 	 */
 	async updateUser(id: string, attrs: UpdateUserDto): Promise<User> {
 		const user = await this.findById(id);
+
+		if (attrs?.email) {
+			const existingUser = await this.findByEmail(attrs.email);
+			if (existingUser) throw new BadRequestException("Email is already taken");
+		}
 
 		return this.dbUtilsService.executeSafely(() =>
 			this.userRepository.save({ ...user, ...attrs }),
