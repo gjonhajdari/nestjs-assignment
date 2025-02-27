@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
 import { DbUtilsService } from "src/common/services/db-utils.service";
+import { DeleteStatus } from "src/common/types";
 import { Repository } from "typeorm";
 import { UsersService } from "../users/users.service";
 import { ManageProjectUsersDto } from "./dtos/manage-project-users.dto";
@@ -161,11 +162,13 @@ export class ProjectsService {
 	 * @param id - The unique UUID of the project
 	 * @returns Promise that resolves to the updated Project entity
 	 */
-	async deleteProject(id: string) {
+	async deleteProject(id: string): Promise<DeleteStatus> {
 		const project = await this.findById(id);
 
-		return this.dbUtilsService.executeSafely(() =>
+		await this.dbUtilsService.executeSafely(() =>
 			this.projectRepository.remove(project),
 		);
+
+		return { deleted: true, message: "Project deleted successfully" };
 	}
 }

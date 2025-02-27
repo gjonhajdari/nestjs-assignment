@@ -10,6 +10,7 @@ import {
 	Post,
 	Query,
 } from "@nestjs/common";
+import { DeleteStatus } from "src/common/types";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { PaginationDto } from "./dtos/pagination.dto";
 import { UpdateTaskDto } from "./dtos/update-tesk.dto";
@@ -55,7 +56,9 @@ export class TasksController {
 	}
 
 	@Delete("/:id")
-	async deleteTask(@Param("id", ParseUUIDPipe) id: string): Promise<Task> {
+	async deleteTask(
+		@Param("id", ParseUUIDPipe) id: string,
+	): Promise<DeleteStatus> {
 		return this.tasksService.deleteTask(id);
 	}
 }

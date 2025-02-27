@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DbUtilsService } from "src/common/services/db-utils.service";
+import { DeleteStatus } from "src/common/types";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
@@ -87,11 +88,13 @@ export class UsersService {
 	 * @param id - The unique UUID of the user
 	 * @returns Promise that resolves to the updated User entity
 	 */
-	async deleteUser(id: string): Promise<User> {
+	async deleteUser(id: string): Promise<DeleteStatus> {
 		const user = await this.findById(id);
 
-		return this.dbUtilsService.executeSafely(() =>
+		await this.dbUtilsService.executeSafely(() =>
 			this.userRepository.remove(user),
 		);
+
+		return { deleted: true, message: "User deleted successfully" };
 	}
 }

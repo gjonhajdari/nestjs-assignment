@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
 import { DbUtilsService } from "src/common/services/db-utils.service";
+import { DeleteStatus } from "src/common/types";
 import { Repository } from "typeorm";
 import { ProjectsService } from "../projects/projects.service";
 import { UsersService } from "../users/users.service";
@@ -151,13 +152,15 @@ export class TasksService {
 	 * Deletes a task by its UUID from the database
 	 *
 	 * @param id - The unique UUID of the task
-	 * @returns Promise that resolves to the updated Task entity
+	 * @returns Promise that resolves to the DeleteStatus type
 	 */
-	async deleteTask(id: string): Promise<Task> {
+	async deleteTask(id: string): Promise<DeleteStatus> {
 		const task = await this.findById(id);
 
-		return this.dbUtilsService.executeSafely(() =>
+		await this.dbUtilsService.executeSafely(() =>
 			this.taskRepository.remove(task),
 		);
+
+		return { deleted: true, message: "Task deleted sucessfully" };
 	}
 }

@@ -8,6 +8,7 @@ import {
 	Patch,
 	Post,
 } from "@nestjs/common";
+import { DeleteStatus } from "src/common/types";
 import { EmailValidationPipe } from "../pipes/email.pipe";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
@@ -44,7 +45,9 @@ export class UsersController {
 	}
 
 	@Delete("/:id")
-	async deleteUser(@Param("id", ParseUUIDPipe) id: string): Promise<User> {
+	async deleteUser(
+		@Param("id", ParseUUIDPipe) id: string,
+	): Promise<DeleteStatus> {
 		return this.usersService.deleteUser(id);
 	}
 }

@@ -9,6 +9,7 @@ import {
 	Post,
 	Query,
 } from "@nestjs/common";
+import { DeleteStatus } from "src/common/types";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import { ManageProjectUsersDto } from "./dtos/manage-project-users.dto";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
@@ -64,7 +65,7 @@ export class ProjectsController {
 	@Delete("/:id")
 	async deleteProject(
 		@Param("id", ParseUUIDPipe) id: string,
-	): Promise<Project> {
+	): Promise<DeleteStatus> {
 		return this.projectsService.deleteProject(id);
 	}
 }
