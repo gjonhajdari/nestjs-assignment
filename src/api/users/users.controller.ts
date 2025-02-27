@@ -31,7 +31,7 @@ export class UsersController {
 		return this.usersService.findByEmail(email, true);
 	}
 
-	@Post()
+	@Post("/create")
 	async createUser(@Body() body: CreateUserDto): Promise<User> {
 		return this.usersService.createUser(body);
 	}

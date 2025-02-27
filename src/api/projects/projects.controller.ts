@@ -35,19 +35,19 @@ export class ProjectsController {
 		return this.projectsService.findByName(name, userId);
 	}
 
-	@Post()
+	@Post("/create")
 	async createProject(@Body() body: CreateProjectDto): Promise<Project> {
 		return this.projectsService.createProject(body.name, body.description);
 	}
 
-	@Patch("/add")
+	@Patch("/user/add")
 	async addUserToProject(
 		@Body() body: ManageProjectUsersDto,
 	): Promise<Project> {
 		return this.projectsService.addUser(body);
 	}
 
-	@Patch("/remove")
+	@Patch("/user/remove")
 	async removeUserFromProject(
 		@Body() body: ManageProjectUsersDto,
 	): Promise<Project> {

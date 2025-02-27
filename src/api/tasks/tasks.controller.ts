@@ -26,7 +26,7 @@ export class TasksController {
 		return this.tasksService.findById(id);
 	}
 
-	@Post()
+	@Post("/create")
 	async createTask(@Body() body: CreateTaskDto): Promise<Task> {
 		return this.tasksService.createTask(body);
 	}
