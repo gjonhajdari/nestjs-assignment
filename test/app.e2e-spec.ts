@@ -15,9 +15,15 @@ describe("AppController (e2e)", () => {
 
 		app = moduleFixture.createNestApplication();
 		await app.init();
+
+		const dataSouce = app.get(DataSource);
+		await dataSouce.synchronize(true);
 	});
 
-	it("/ (GET)", () => {
+	afterEach(async () => {
+		await app.close();
+	});
+
 		return request(app.getHttpServer())
 			.get("/")
 			.expect(200)
