@@ -13,6 +13,7 @@ export const config = {
 	password: process.env.TYPEORM_PASSWORD,
 	database: process.env.TYPEORM_DATABASE,
 	entities: [process.env.TYPEORM_ENTITIES],
+	migrations: [process.env.TYPEORM_MIGRATIONS],
 	synchronize: process.env.TYPEORM_SYNCHRONIZE,
 	dropSchema: process.env.TYPEORM_DROP_SCHEMA,
 	migrationsRun: process.env.TYPEORM_MIGRATIONS_RUN,
