@@ -60,7 +60,7 @@ export class UsersService {
 		const user = await this.findByEmail(payload.email);
 		if (user) throw new BadRequestException("Email is already taken");
 
-		const newUser = await this.userRepository.create(payload);
+		const newUser = this.userRepository.create(payload);
 
 		return this.dbUtilsService.executeSafely(() =>
 			this.userRepository.save(newUser),

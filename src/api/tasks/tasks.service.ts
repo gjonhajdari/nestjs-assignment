@@ -109,7 +109,7 @@ export class TasksService {
 	 * @returns Promise that resolves to the created Task entity
 	 */
 	async createTask(payload: CreateTaskDto): Promise<Task> {
-		const task = await this.taskRepository.create({
+		const task = this.taskRepository.create({
 			name: payload.name,
 			description: payload.description,
 			status: payload.status,

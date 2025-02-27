@@ -68,7 +68,8 @@ export class ProjectsService {
 	 * @returns Promise that resolves to the created Project entity
 	 */
 	async createProject(name: string, description: string): Promise<Project> {
-		const project = await this.projectRepository.create({ name, description });
+		const project = this.projectRepository.create({ name, description });
+
 		return this.dbUtilsService.executeSafely(() =>
 			this.projectRepository.save(project),
 		);
