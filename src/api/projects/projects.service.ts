@@ -25,10 +25,12 @@ export class ProjectsService {
 	 * @throws {NotFoundException} - If no project is found with the given UUID
 	 */
 	async findById(id: string, loadUser = false): Promise<Project> {
-		const project = await this.projectRepository.findOne({
-			where: { id },
-			relations: { users: loadUser },
-		});
+		const project = await this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.findOne({
+				where: { id },
+				relations: { users: loadUser },
+			}),
+		);
 
 		if (!project) throw new NotFoundException("Project does not exist");
 
@@ -45,10 +47,12 @@ export class ProjectsService {
 	async findByName(name: string, userId: string): Promise<Project[]> {
 		await this.usersService.findById(userId);
 
-		const project = await this.projectRepository.find({
-			where: { name, users: { id: userId } },
-			relations: { users: true },
-		});
+		const project = await this.dbUtilsService.executeSafely(() =>
+			this.projectRepository.find({
+				where: { name, users: { id: userId } },
+				relations: { users: true },
+			}),
+		);
 
 		if (!project) throw new NotFoundException(`Project '${name}' does not exist`);
 

@@ -27,7 +27,9 @@ export class UsersService {
 	 * @throws {NotFoundException} - If no user is found with the given UUID
 	 */
 	async findById(id: string): Promise<User> {
-		const user = await this.userRepository.findOne({ where: { id } });
+		const user = await this.dbUtilsService.executeSafely(() =>
+			this.userRepository.findOne({ where: { id } }),
+		);
 
 		if (!user || user.deletedAt) throw new NotFoundException("User does not exist");
 
@@ -43,7 +45,9 @@ export class UsersService {
 	 * @throws {NotFoundException} - If a user with the given email doesn't exist (optional)
 	 */
 	async findByEmail(email: string, throwsError = false): Promise<User | null> {
-		const user = await this.userRepository.findOne({ where: { email } });
+		const user = await this.dbUtilsService.executeSafely(() =>
+			this.userRepository.findOne({ where: { email } }),
+		);
 
 		if (throwsError && !user)
 			throw new NotFoundException(`User with email '${email} not found'`);
@@ -98,7 +102,6 @@ export class UsersService {
 		user.deletedAt = new Date();
 
 		await this.dbUtilsService.executeSafely(() => this.userRepository.save(user));
-
 		return { deleted: true, message: "User deleted successfully" };
 	}
 }

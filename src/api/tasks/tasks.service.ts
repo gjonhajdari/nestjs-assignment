@@ -41,12 +41,14 @@ export class TasksService {
 	 * @throws {NotFoundException} - If no task is found with the given UUID
 	 */
 	async findById(id: string, loadUser = false, loadProject = false): Promise<Task> {
-		const task = await this.taskRepository.findOne({
-			where: { id },
-			relations: { user: loadUser, project: loadProject },
-		});
-		if (!task) throw new NotFoundException("Task does not exist");
+		const task = await this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.findOne({
+				where: { id },
+				relations: { user: loadUser, project: loadProject },
+			}),
+		);
 
+		if (!task) throw new NotFoundException("Task does not exist");
 		return task;
 	}
 
@@ -66,20 +68,25 @@ export class TasksService {
 		const user = await this.usersService.findById(userId);
 		const skip = this.calculateSkip(pageSize, page);
 
-		return this.taskRepository.find({
-			select: {
-				id: true,
-				name: true,
-				description: true,
-				status: true,
-				createdAt: true,
-				project: { id: true, name: true },
-			},
-			relations: { project: true },
-			where: { user, status: params?.status },
-			take: pageSize,
-			skip,
-		});
+		return this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.find({
+				select: {
+					id: true,
+					name: true,
+					description: true,
+					status: true,
+					createdAt: true,
+					project: { id: true, name: true },
+				},
+				relations: { project: true },
+				where: {
+					user,
+					status: params?.status,
+				},
+				take: pageSize,
+				skip,
+			}),
+		);
 	}
 
 	/**
@@ -91,9 +98,11 @@ export class TasksService {
 	async countTasks(userId: string, status: TaskStatus): Promise<{ count: number }> {
 		const user = await this.usersService.findById(userId);
 
-		const count = await this.taskRepository.count({
-			where: { user, status },
-		});
+		const count = await this.dbUtilsService.executeSafely(() =>
+			this.taskRepository.count({
+				where: { user, status },
+			}),
+		);
 
 		return { count };
 	}
