@@ -39,7 +39,7 @@ export class TasksController {
 		return this.tasksService.findTasksByUserAndStatus(userId, params);
 	}
 
-	@Get("/count/:userId")
+	@Get("/user/:userId/count")
 	async countTasks(
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query("status", new ParseEnumPipe(TaskStatus)) status: TaskStatus,
