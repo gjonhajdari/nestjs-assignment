@@ -351,3 +351,8 @@ curl --url "localhost:3000/projects/4f3b2c1d-5e6f-7a8b-9c0d-e1f2g3h4i5j7"
   "message": "Project deleted successfully."
 }
 ```
+
+<div style="display: flex; justify-content: space-between; margin-top: 30px;">
+  <a href="./users-api.md">← Previous: Users Endpoint</a>
+  <a href="./tasks-api.md">Next: Tasks Endpoint →</a>
+</div>

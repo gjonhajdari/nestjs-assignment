@@ -239,3 +239,8 @@ curl --request DELETE \
   "message": "User deleted successfully"
 }
 ```
+
+<div style="display: flex; justify-content: space-between; margin-top: 30px;">
+  <a href="../API_DOCUMENTATION.md">← Previous: Main Docs</a>
+  <a href="./projects-api.md">Next: Projects Endpoint →</a>
+</div>

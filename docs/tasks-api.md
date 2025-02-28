@@ -332,3 +332,7 @@ curl --url "localhost:3000/tasks/4f3b2c1d-5e6f-7a8b-9c0d-e1f2g3h4i5j6"
   "message": "Task deleted successfully."
 }
 ```
+
+<div style="display: flex; justify-content: space-between; margin-top: 30px;">
+  <a href="./projects-api.md">← Previous: Projects Docs</a>
+</div>
