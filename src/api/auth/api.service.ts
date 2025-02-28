@@ -20,4 +20,10 @@ export class ApiService {
 
 		return apiKey;
 	}
+
+	async generateKey(): Promise<ApiKey> {
+		const key = this.apiRepository.create();
+
+		return this.apiRepository.save(key);
+	}
 }
