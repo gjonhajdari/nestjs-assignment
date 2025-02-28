@@ -6,8 +6,6 @@ export class AuthGuard implements CanActivate {
 	constructor(@Inject() private apiService: ApiService) {}
 
 	async canActivate(context: ExecutionContext) {
-		if (process.env.NODE_ENV === "test") return true;
-
 		const req: Request = context.switchToHttp().getRequest();
 		const providedKey = req.headers["x-api-key"] as string;
 
