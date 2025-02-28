@@ -70,6 +70,11 @@ export class TasksService {
 
 		return this.dbUtilsService.executeSafely(() =>
 			this.taskRepository.find({
+				where: {
+					user: { id: userId },
+					status: params?.status,
+				},
+				relations: { project: true },
 				select: {
 					id: true,
 					name: true,
@@ -77,11 +82,6 @@ export class TasksService {
 					status: true,
 					createdAt: true,
 					project: { id: true, name: true },
-				},
-				relations: { project: true },
-				where: {
-					user: { id: userId },
-					status: params?.status,
 				},
 				order: { createdAt: "DESC" },
 				take: pageSize,
