@@ -65,7 +65,7 @@ export class TasksService {
 		const page = params?.page || 1;
 		const pageSize = params?.pageSize || 10;
 
-		const user = await this.usersService.findById(userId);
+		await this.usersService.findById(userId);
 		const skip = this.calculateSkip(pageSize, page);
 
 		return this.dbUtilsService.executeSafely(() =>
@@ -80,9 +80,10 @@ export class TasksService {
 				},
 				relations: { project: true },
 				where: {
-					user,
+					user: { id: userId },
 					status: params?.status,
 				},
+				order: { createdAt: "DESC" },
 				take: pageSize,
 				skip,
 			}),
@@ -96,11 +97,11 @@ export class TasksService {
 	 * @returns Promise that resolves to the number of tasks
 	 */
 	async countTasks(userId: string, status: TaskStatus): Promise<{ count: number }> {
-		const user = await this.usersService.findById(userId);
+		await this.usersService.findById(userId);
 
 		const count = await this.dbUtilsService.executeSafely(() =>
 			this.taskRepository.count({
-				where: { user, status },
+				where: { user: { id: userId }, status },
 			}),
 		);
 
