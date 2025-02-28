@@ -43,7 +43,7 @@ export class TasksController {
 	async countTasks(
 		@Param("userId", ParseUUIDPipe) userId: string,
 		@Query("status", new ParseEnumPipe(TaskStatus)) status: TaskStatus,
-	): Promise<number> {
+	): Promise<{ count: number }> {
 		return this.tasksService.countTasks(userId, status);
 	}
 
