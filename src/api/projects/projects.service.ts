@@ -51,6 +51,7 @@ export class ProjectsService {
 			this.projectRepository.find({
 				where: { name, users: { id: userId } },
 				relations: { users: true },
+				order: { createdAt: "DESC" },
 			}),
 		);
 
