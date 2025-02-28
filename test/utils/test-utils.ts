@@ -2,9 +2,8 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { ApiService } from "src/api/auth/api.service";
 import { AppModule } from "src/app.module";
+import * as request from "supertest";
 import { DataSource } from "typeorm";
-import { authRequest } from "./helpers";
-
 export class TestApp {
 	app: INestApplication;
 	apiKey: string;
@@ -33,10 +32,19 @@ export class TestApp {
 	}
 
 	getRequest() {
-		return authRequest(this.getHttpServer(), this.apiKey);
+		return this.authRequest(this.getHttpServer(), this.apiKey);
 	}
 
 	async close() {
 		return this.app.close();
+	}
+
+	private authRequest(server, key) {
+		return {
+			get: (url) => request(server).get(url).set("x-api-key", key),
+			post: (url) => request(server).post(url).set("x-api-key", key),
+			patch: (url) => request(server).patch(url).set("x-api-key", key),
+			delete: (url) => request(server).delete(url).set("x-api-key", key),
+		};
 	}
 }
