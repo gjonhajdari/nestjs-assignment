@@ -165,7 +165,7 @@ curl --url "localhost:3000/projects" \
 Adds a user to a project.
 
 ```plaintext
-POST /projects/users/add
+PATCH /projects/users/add
 ```
 
 Supported attributes:
@@ -223,7 +223,7 @@ curl --url "localhost:3000/projects/users/add" \
 Removes a user from a project.
 
 ```plaintext
-POST /projects/users/remove
+PATCH /projects/users/remove
 ```
 
 Supported attributes:
@@ -272,7 +272,7 @@ curl --url "localhost:3000/projects/users/remove" \
 Updates an existing project.
 
 ```plaintext
-PUT /projects/:projectId
+PATCH /projects/:projectId
 ```
 
 Supported attributes:
