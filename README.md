@@ -40,6 +40,21 @@ $ npm run build
 $ npm run start:prod
 ```
 
+## Running tests
+
+Testing generates a local SQLite database. The database location will be depended on the `TYPEORM_DATABASE` path in the `.env.test` file.
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
 # Requests
 
 When sending HTTP requests, either via Postman or any other tool, make sure to include the `x-api-key` header with any appropriate value. If the `x-api-key` header is not included, the server will respond with a `403 Forbidden` status code.
