@@ -40,11 +40,7 @@ export class TasksService {
 	 * @returns Promise that resolves to the found Task entity
 	 * @throws {NotFoundException} - If no task is found with the given UUID
 	 */
-	async findById(
-		id: string,
-		loadUser = false,
-		loadProject = false,
-	): Promise<Task> {
+	async findById(id: string, loadUser = false, loadProject = false): Promise<Task> {
 		const task = await this.taskRepository.findOne({
 			where: { id },
 			relations: { user: loadUser, project: loadProject },
@@ -63,10 +59,7 @@ export class TasksService {
 	 * @param pageSize - The number of entities returned (default 10)
 	 * @returns Promise that resolves to the found Task entity
 	 */
-	async findTasksByUserAndStatus(
-		userId: string,
-		params?: FindTasksDto,
-	): Promise<Task[]> {
+	async findTasksByUserAndStatus(userId: string, params?: FindTasksDto): Promise<Task[]> {
 		const page = params?.page || 1;
 		const pageSize = params?.pageSize || 10;
 
@@ -95,10 +88,7 @@ export class TasksService {
 	 * @param payload - Object containing the user UUID and task status
 	 * @returns Promise that resolves to the number of tasks
 	 */
-	async countTasks(
-		userId: string,
-		status: TaskStatus,
-	): Promise<{ count: number }> {
+	async countTasks(userId: string, status: TaskStatus): Promise<{ count: number }> {
 		const user = await this.usersService.findById(userId);
 
 		const count = await this.taskRepository.count({
@@ -124,9 +114,7 @@ export class TasksService {
 		task.user = await this.usersService.findById(payload.userId);
 		task.project = await this.projectsService.findById(payload.projectId);
 
-		return this.dbUtilsService.executeSafely(() =>
-			this.taskRepository.save(task),
-		);
+		return this.dbUtilsService.executeSafely(() => this.taskRepository.save(task));
 	}
 
 	/**
@@ -163,9 +151,7 @@ export class TasksService {
 	async deleteTask(id: string): Promise<DeleteStatus> {
 		const task = await this.findById(id);
 
-		await this.dbUtilsService.executeSafely(() =>
-			this.taskRepository.remove(task),
-		);
+		await this.dbUtilsService.executeSafely(() => this.taskRepository.remove(task));
 
 		return { deleted: true, message: "Task deleted sucessfully" };
 	}

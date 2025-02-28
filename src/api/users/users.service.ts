@@ -29,8 +29,7 @@ export class UsersService {
 	async findById(id: string): Promise<User> {
 		const user = await this.userRepository.findOne({ where: { id } });
 
-		if (!user || user.deletedAt)
-			throw new NotFoundException("User does not exist");
+		if (!user || user.deletedAt) throw new NotFoundException("User does not exist");
 
 		return user;
 	}
@@ -65,9 +64,7 @@ export class UsersService {
 
 		const newUser = this.userRepository.create(payload);
 
-		return this.dbUtilsService.executeSafely(() =>
-			this.userRepository.save(newUser),
-		);
+		return this.dbUtilsService.executeSafely(() => this.userRepository.save(newUser));
 	}
 
 	/**
@@ -100,9 +97,7 @@ export class UsersService {
 		const user = await this.findById(id);
 		user.deletedAt = new Date();
 
-		await this.dbUtilsService.executeSafely(() =>
-			this.userRepository.save(user),
-		);
+		await this.dbUtilsService.executeSafely(() => this.userRepository.save(user));
 
 		return { deleted: true, message: "User deleted successfully" };
 	}

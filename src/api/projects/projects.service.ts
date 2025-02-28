@@ -1,8 +1,4 @@
-import {
-	BadRequestException,
-	Injectable,
-	NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { omit } from "lodash";
 import { DbUtilsService } from "src/common/services/db-utils.service";
@@ -54,8 +50,7 @@ export class ProjectsService {
 			relations: { users: true },
 		});
 
-		if (!project)
-			throw new NotFoundException(`Project '${name}' does not exist`);
+		if (!project) throw new NotFoundException(`Project '${name}' does not exist`);
 
 		return project;
 	}
@@ -70,9 +65,7 @@ export class ProjectsService {
 	async createProject(name: string, description: string): Promise<Project> {
 		const project = this.projectRepository.create({ name, description });
 
-		return this.dbUtilsService.executeSafely(() =>
-			this.projectRepository.save(project),
-		);
+		return this.dbUtilsService.executeSafely(() => this.projectRepository.save(project));
 	}
 
 	/**
@@ -113,24 +106,20 @@ export class ProjectsService {
 		const existsInProject = project.users.map((u) => u.id).includes(userId);
 
 		if (operation === "add") {
-			if (existsInProject)
-				throw new BadRequestException("User is already added to project");
+			if (existsInProject) throw new BadRequestException("User is already added to project");
 
 			const user = await this.usersService.findById(userId);
 			project.users.push(user);
 		}
 
 		if (operation === "remove") {
-			if (!existsInProject)
-				throw new BadRequestException("User doesn't exist in project");
+			if (!existsInProject) throw new BadRequestException("User doesn't exist in project");
 
 			const position = project.users.findIndex((u) => u.id === userId);
 			project.users.splice(position, 1);
 		}
 
-		return this.dbUtilsService.executeSafely(() =>
-			this.projectRepository.save(project),
-		);
+		return this.dbUtilsService.executeSafely(() => this.projectRepository.save(project));
 	}
 
 	/**
@@ -166,9 +155,7 @@ export class ProjectsService {
 	async deleteProject(id: string): Promise<DeleteStatus> {
 		const project = await this.findById(id);
 
-		await this.dbUtilsService.executeSafely(() =>
-			this.projectRepository.remove(project),
-		);
+		await this.dbUtilsService.executeSafely(() => this.projectRepository.remove(project));
 
 		return { deleted: true, message: "Project deleted successfully" };
 	}

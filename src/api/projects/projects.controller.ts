@@ -21,9 +21,7 @@ export class ProjectsController {
 	constructor(private readonly projectsService: ProjectsService) {}
 
 	@Get("/:id")
-	async findProjectById(
-		@Param("id", ParseUUIDPipe) id: string,
-	): Promise<Project> {
+	async findProjectById(@Param("id", ParseUUIDPipe) id: string): Promise<Project> {
 		return this.projectsService.findById(id);
 	}
 
@@ -41,16 +39,12 @@ export class ProjectsController {
 	}
 
 	@Patch("/user/add")
-	async addUserToProject(
-		@Body() body: ManageProjectUsersDto,
-	): Promise<Project> {
+	async addUserToProject(@Body() body: ManageProjectUsersDto): Promise<Project> {
 		return this.projectsService.addUser(body);
 	}
 
 	@Patch("/user/remove")
-	async removeUserFromProject(
-		@Body() body: ManageProjectUsersDto,
-	): Promise<Project> {
+	async removeUserFromProject(@Body() body: ManageProjectUsersDto): Promise<Project> {
 		return this.projectsService.removeUser(body);
 	}
 
@@ -63,9 +57,7 @@ export class ProjectsController {
 	}
 
 	@Delete("/:id")
-	async deleteProject(
-		@Param("id", ParseUUIDPipe) id: string,
-	): Promise<DeleteStatus> {
+	async deleteProject(@Param("id", ParseUUIDPipe) id: string): Promise<DeleteStatus> {
 		return this.projectsService.deleteProject(id);
 	}
 }

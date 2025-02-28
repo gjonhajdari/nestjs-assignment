@@ -54,9 +54,7 @@ describe("User controller", () => {
 	});
 
 	it("should throw when user isn't found", async () => {
-		await expect(controller.findUserById("no-id")).rejects.toThrow(
-			NotFoundException,
-		);
+		await expect(controller.findUserById("no-id")).rejects.toThrow(NotFoundException);
 	});
 
 	it("should return user when creating one", async () => {

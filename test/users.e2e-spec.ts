@@ -47,10 +47,7 @@ describe("User endpoint", () => {
 			location: "test",
 		});
 
-		await testApp
-			.getRequest()
-			.get("/users/bdef8e07-e4f0-41dc-85ff-7b4b367f5f67")
-			.expect(404);
+		await testApp.getRequest().get("/users/bdef8e07-e4f0-41dc-85ff-7b4b367f5f67").expect(404);
 	});
 
 	it("/users/create -> POST", async () => {
@@ -111,15 +108,12 @@ describe("User endpoint", () => {
 	});
 
 	it("/:userId -> PATCH", async () => {
-		const { body: user } = await testApp
-			.getRequest()
-			.post("/users/create")
-			.send({
-				firstName: "test",
-				lastName: "test",
-				email: "test@test.com",
-				location: "test",
-			});
+		const { body: user } = await testApp.getRequest().post("/users/create").send({
+			firstName: "test",
+			lastName: "test",
+			email: "test@test.com",
+			location: "test",
+		});
 
 		return testApp
 			.getRequest()
@@ -139,15 +133,12 @@ describe("User endpoint", () => {
 			location: "test",
 		});
 
-		const { body: user } = await testApp
-			.getRequest()
-			.post("/users/create")
-			.send({
-				firstName: "test",
-				lastName: "test",
-				email: "test2@test.com",
-				location: "test",
-			});
+		const { body: user } = await testApp.getRequest().post("/users/create").send({
+			firstName: "test",
+			lastName: "test",
+			email: "test2@test.com",
+			location: "test",
+		});
 
 		return testApp
 			.getRequest()
@@ -157,30 +148,24 @@ describe("User endpoint", () => {
 	});
 
 	it("/:userId -> DELETE", async () => {
-		const { body: user } = await testApp
-			.getRequest()
-			.post("/users/create")
-			.send({
-				firstName: "test",
-				lastName: "test",
-				email: "test@test.com",
-				location: "test",
-			});
+		const { body: user } = await testApp.getRequest().post("/users/create").send({
+			firstName: "test",
+			lastName: "test",
+			email: "test@test.com",
+			location: "test",
+		});
 
 		await testApp.getRequest().delete(`/users/${user.id}`).expect(200);
 		await testApp.getRequest().get(`/users/${user.id}`).expect(404);
 	});
 
 	it("/:userId -> DELETE (User not found)", async () => {
-		const { body: user } = await testApp
-			.getRequest()
-			.post("/users/create")
-			.send({
-				firstName: "test",
-				lastName: "test",
-				email: "test@test.com",
-				location: "test",
-			});
+		const { body: user } = await testApp.getRequest().post("/users/create").send({
+			firstName: "test",
+			lastName: "test",
+			email: "test@test.com",
+			location: "test",
+		});
 
 		await testApp.getRequest().delete(`/users/${user.id}`).expect(200);
 		await testApp.getRequest().delete(`/users/${user.id}`).expect(404);
