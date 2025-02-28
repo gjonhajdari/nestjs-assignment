@@ -3,6 +3,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
@@ -22,6 +23,7 @@ export class Task {
 	@Column({ type: "text" })
 	description: string;
 
+	@Index()
 	@Column({
 		type: "simple-enum",
 		enum: TaskStatus,
