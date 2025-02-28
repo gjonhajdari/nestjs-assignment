@@ -8,6 +8,6 @@ This document provides information about all available endpoints in the Nest.js 
 
 Documentation for each endpoint is available in the following sections:
 
-- [Users](./docs/API_USERS.md)
-- [Projects](./docs/API_PROJECTS.md)
-- [Tasks](./docs/API_TASKS.md)
+- [Users Endpoint](./docs/users-api.md)
+- [Tasks Endpoint](./docs/tasks-api.md)
+- [Projects Endpoint](./docs/projects-api.md)
