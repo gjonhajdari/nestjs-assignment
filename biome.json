@@ -11,5 +11,11 @@
 				"noParameterAssign": "off"
 			}
 		}
+	},
+	"formatter": {
+		"lineWidth": 95
+	},
+	"files": {
+		"ignore": ["**/node_modules/**", "dist/**", "./migrations", "./test/db-test.sqlite"]
 	}
 }
