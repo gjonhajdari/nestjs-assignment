@@ -14,10 +14,10 @@ export class ApiService {
 	 * @returns Promise that resolves to the found ApiKey entity or a null value
 	 * @throws {UnauthorizedException} If the providded api key isn't active
 	 */
-	async findKey(key: string): Promise<ApiKey> {
+	async findKey(key: string): Promise<ApiKey | null> {
 		const apiKey = await this.apiRepository.findOne({ where: { id: key } });
 
-		if (!apiKey || !apiKey.active) {
+		if (apiKey && !apiKey.isActive) {
 			throw new UnauthorizedException("Please provide a valid and active API Key");
 		}
 
