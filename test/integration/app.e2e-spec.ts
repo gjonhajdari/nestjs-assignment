@@ -1,4 +1,4 @@
-import { TestApp } from "../utils/test-utils";
+import { TestApp } from "../utils/test-app";
 
 describe("AppController (e2e)", () => {
 	let testApp: TestApp;

@@ -1,6 +1,6 @@
 import { Project } from "src/api/projects/project.entity";
 import { User } from "src/api/users/user.entity";
-import { TestApp } from "../utils/test-utils";
+import { TestApp } from "../utils/test-app";
 
 describe("Projects endpoint", () => {
 	let testApp: TestApp;
