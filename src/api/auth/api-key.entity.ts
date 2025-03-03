@@ -5,6 +5,6 @@ export class ApiKey {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@Column({ default: true })
-	active: boolean;
+	@Column({ default: true, name: "is_active" })
+	isActive: boolean;
 }
