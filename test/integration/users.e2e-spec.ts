@@ -155,6 +155,21 @@ describe("User endpoint", () => {
 			.expect(404);
 	});
 
+	it("/:userId -> PATCH (Invalid Email)", async () => {
+		await testApp.getRequest().post("/users/create").send({
+			firstName: "test",
+			lastName: "test",
+			email: "test@test.com",
+			location: "test",
+		});
+
+		return testApp
+			.getRequest()
+			.patch(`/users/${testApp.testUUID}`)
+			.send({ email: "test" })
+			.expect(400);
+	});
+
 	it("/:userId -> PATCH (Email already taken)", async () => {
 		await testApp.getRequest().post("/users/create").send({
 			firstName: "test",
