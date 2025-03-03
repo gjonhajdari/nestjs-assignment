@@ -7,6 +7,13 @@ import { ApiKey } from "./api-key.entity";
 export class ApiService {
 	constructor(@InjectRepository(ApiKey) private apiRepository: Repository<ApiKey>) {}
 
+	/**
+	 * Retrieves an API Key by its UUID from the database
+	 *
+	 * @param key - The unique UUID of the API Key
+	 * @returns Promise that resolves to the found ApiKey entity or a null value
+	 * @throws {UnauthorizedException} If the providded api key isn't active
+	 */
 	async findKey(key: string): Promise<ApiKey> {
 		const apiKey = await this.apiRepository.findOne({ where: { id: key } });
 
@@ -17,6 +24,11 @@ export class ApiService {
 		return apiKey;
 	}
 
+	/**
+	 * Generates a new unique API Key
+	 *
+	 * @returns Promise that resolves to the new generated API Key
+	 */
 	async generateKey(): Promise<ApiKey> {
 		const key = this.apiRepository.create();
 
