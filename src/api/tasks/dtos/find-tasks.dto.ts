@@ -6,15 +6,15 @@ export class FindTasksDto {
 	@IsEnum(TaskStatus)
 	status: TaskStatus;
 
+	@IsOptional()
 	@IsInt()
 	@Type(() => Number)
 	@Min(1)
-	@IsOptional()
 	page?: number;
 
+	@IsOptional()
 	@IsInt()
 	@Type(() => Number)
 	@Min(1)
-	@IsOptional()
 	pageSize?: number;
 }

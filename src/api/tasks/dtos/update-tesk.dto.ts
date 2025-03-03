@@ -2,23 +2,23 @@ import { IsEnum, IsOptional, IsString, IsUUID } from "class-validator";
 import { TaskStatus } from "src/common/types";
 
 export class UpdateTaskDto {
-	@IsString()
 	@IsOptional()
-	name: string;
-
 	@IsString()
-	@IsOptional()
-	description: string;
+	name?: string;
 
+	@IsOptional()
+	@IsString()
+	description?: string;
+
+	@IsOptional()
 	@IsEnum(TaskStatus)
-	@IsOptional()
-	status: TaskStatus;
+	status?: TaskStatus;
 
-	@IsUUID()
 	@IsOptional()
+	@IsUUID()
 	userId?: string;
 
-	@IsUUID()
 	@IsOptional()
+	@IsUUID()
 	projectId?: string;
 }
