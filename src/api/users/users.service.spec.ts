@@ -8,7 +8,7 @@ import { User } from "./user.entity";
 import { UsersService } from "./users.service";
 
 describe("Users service", () => {
-	let service: UsersService;
+	let usersService: UsersService;
 	let dataSource: DataSource;
 
 	beforeEach(async () => {
@@ -24,15 +24,15 @@ describe("Users service", () => {
 		dataSource = module.get<DataSource>(DataSource);
 		await dataSource.synchronize(true);
 
-		service = module.get<UsersService>(UsersService);
+		usersService = module.get<UsersService>(UsersService);
 	});
 
 	it("should be defined", () => {
-		expect(service).toBeDefined();
+		expect(usersService).toBeDefined();
 	});
 
 	it("should create a user", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
@@ -47,7 +47,7 @@ describe("Users service", () => {
 	});
 
 	it("should throw if trying to create a user with an email that's already taken", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
@@ -55,7 +55,7 @@ describe("Users service", () => {
 		});
 
 		expect(
-			service.createUser({
+			usersService.createUser({
 				firstName: "test2",
 				lastName: "test2",
 				email: "test@test.com",
@@ -65,14 +65,14 @@ describe("Users service", () => {
 	});
 
 	it("should find a user from their ID", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		const foundUser = await service.findById(user.id);
+		const foundUser = await usersService.findById(user.id);
 
 		expect(foundUser).toBeDefined();
 		expect(foundUser.firstName).toEqual("test");
@@ -82,25 +82,25 @@ describe("Users service", () => {
 	});
 
 	it("should throw if a user with given ID doesn't exist", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		expect(service.findById("1")).rejects.toThrow(NotFoundException);
+		expect(usersService.findById("1")).rejects.toThrow(NotFoundException);
 	});
 
 	it("should find a user from their email", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		const foundUser = await service.findByEmail("test@test.com");
+		const foundUser = await usersService.findByEmail("test@test.com");
 		expect(foundUser).toBeDefined();
 		expect(foundUser?.firstName).toEqual("test");
 		expect(foundUser?.lastName).toEqual("test");
@@ -109,37 +109,39 @@ describe("Users service", () => {
 	});
 
 	it("should return null if a user with the given email isn't found (Specified)", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		const foundUser = await service.findByEmail("test2@test.com");
+		const foundUser = await usersService.findByEmail("test2@test.com");
 		expect(foundUser).toBeNull();
 	});
 
 	it("should throw if a user with the given email isn't found (Specified)", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		expect(service.findByEmail("test2@test.com", true)).rejects.toThrow(NotFoundException);
+		expect(usersService.findByEmail("test2@test.com", true)).rejects.toThrow(
+			NotFoundException,
+		);
 	});
 
 	it("should update user with new values", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		const updatedUser = await service.updateUser(user.id, {
+		const updatedUser = await usersService.updateUser(user.id, {
 			firstName: "test2",
 			lastName: "test2",
 			email: "test2@test.com",
@@ -154,59 +156,60 @@ describe("Users service", () => {
 	});
 
 	it("should throw if trying to update a user that doesn't exist", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test2@test.com",
 			location: "test",
 		});
 
-		expect(service.updateUser("user.id", { email: "test2@test.com" })).rejects.toThrow(
+		expect(usersService.updateUser("user.id", { email: "test2@test.com" })).rejects.toThrow(
 			NotFoundException,
 		);
 	});
 
 	it("should throw if trying to update user with an email that's already taken", async () => {
-		await service.createUser({
+		await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test@test.com",
 			location: "test",
 		});
 
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test2@test.com",
 			location: "test",
 		});
 
-		expect(service.updateUser(user.id, { email: "test@test.com" })).rejects.toThrow(
+		expect(usersService.updateUser(user.id, { email: "test@test.com" })).rejects.toThrow(
 			BadRequestException,
 		);
 	});
 
 	it("should delete user with the given ID", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test2@test.com",
 			location: "test",
 		});
 
-		await service.deleteUser(user.id);
-		expect(service.findById(user.id)).rejects.toThrow(NotFoundException);
+		await usersService.deleteUser(user.id);
+
+		expect(usersService.findById(user.id)).rejects.toThrow(NotFoundException);
 	});
 
 	it("should throw if trying to delete a user that's already been deleted", async () => {
-		const user = await service.createUser({
+		const user = await usersService.createUser({
 			firstName: "test",
 			lastName: "test",
 			email: "test2@test.com",
 			location: "test",
 		});
 
-		await service.deleteUser(user.id);
-		expect(service.deleteUser(user.id)).rejects.toThrow(NotFoundException);
+		await usersService.deleteUser(user.id);
+		expect(usersService.deleteUser(user.id)).rejects.toThrow(NotFoundException);
 	});
 });
