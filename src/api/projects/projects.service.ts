@@ -108,6 +108,8 @@ export class ProjectsService {
 		operation: "add" | "remove",
 	): Promise<Project> {
 		const project = await this.findById(projectId, true);
+		await this.usersService.findById(userId);
+
 		const existsInProject = project.users.map((u) => u.id).includes(userId);
 
 		if (operation === "add") {
