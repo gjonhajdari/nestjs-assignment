@@ -7,6 +7,7 @@ import { DataSource } from "typeorm";
 export class TestApp {
 	app: INestApplication;
 	apiKey: string;
+	testUUID = "2ba986fa-28a3-4b20-ac4a-5b2b09238154";
 
 	static async create(): Promise<TestApp> {
 		const testApp = new TestApp();
