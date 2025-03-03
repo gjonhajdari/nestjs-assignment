@@ -55,7 +55,7 @@ export class ProjectsService {
 			}),
 		);
 
-		if (!project) throw new NotFoundException(`Project '${name}' does not exist`);
+		if (!project.length) throw new NotFoundException(`Project '${name}' does not exist`);
 
 		return project;
 	}
