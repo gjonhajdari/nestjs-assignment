@@ -28,7 +28,7 @@ export class TestApp {
 		return testApp;
 	}
 
-	getHttpServer() {
+	private getHttpServer() {
 		return this.app.getHttpServer();
 	}
 
