@@ -55,6 +55,22 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Extra
+
+Each request checks for the `x-api-key` header. If the header is not included, or an invalid API key is given, a `403 Forbidden` status code will be returned. An active API key needs to be created to send any requests. You can create a new API key by connecting to the database and running the following  SQL command:
+
+```sql
+-- development or production database
+INSERT INTO api_keys (active) VALUES (true);
+```
+
+This will create a new active API key with a random UUID as its `key` column value. You can find the API key by running the following SQL command:
+
+```sql
+-- development or production database
+SELECT * FROM api_keys;
+```
+
 # Requests
 
 When sending HTTP requests, either via Postman or any other tool, make sure to include the `x-api-key` header with any appropriate value. If the `x-api-key` header is not included, the server will respond with a `403 Forbidden` status code.
