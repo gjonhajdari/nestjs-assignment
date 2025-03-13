@@ -9,6 +9,9 @@
 			"style": {
 				"useImportType": "off",
 				"noParameterAssign": "off"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
 			}
 		}
 	},
@@ -16,6 +19,13 @@
 		"lineWidth": 95
 	},
 	"files": {
-		"ignore": ["**/node_modules/**", "dist/**", "./migrations", "./test/db-test.sqlite"]
+		"ignore": [
+			"**/node_modules/**",
+			"dist/**",
+			"docs",
+			"coverage/",
+			"./migrations",
+			"./test/db-test.sqlite"
+		]
 	}
 }
