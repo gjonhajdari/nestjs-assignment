@@ -61,14 +61,14 @@ Each request checks for the `x-api-key` header. If the header is not included, o
 
 ```sql
 -- development or production database
-INSERT INTO api_keys (active) VALUES (true);
+INSERT INTO api_key (active) VALUES (true);
 ```
 
 This will create a new active API key with a random UUID as its `key` column value. You can find the API key by running the following SQL command:
 
 ```sql
 -- development or production database
-SELECT * FROM api_keys;
+SELECT * FROM api_key;
 ```
 
 # Requests
