@@ -76,10 +76,9 @@ SELECT * FROM api_key;
 When sending HTTP requests, either via Postman or any other tool, make sure to include the `x-api-key` header with any appropriate value. If the `x-api-key` header is not included, the server will respond with a `403 Forbidden` status code.
 
 Example request:
-```http
-GET /users/example@email.com HTTP/1.1
-Host: localhost:3000/
-x-api-key: ac70ca11-5d7f-4ca3-bede-fb1a06a36d28
+```bash
+curl --url "localhost:3000/users/email/example@email.com" \
+     --header "x-api-key: ac70ca11-5d7f-4ca3-bede-fb1a06a36d28"
 ```
 
 # Migrations
